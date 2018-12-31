@@ -3,7 +3,7 @@ import {
     PanResponder, Dimensions, Image, ScrollView, Modal, View, Text,
 } from 'react-native'
 import * as Animatable from 'react-native-animatable'
-import { ImageManipulator } from 'expo'
+import { ImageManipulator, FileSystem } from 'expo'
 import PropTypes from 'prop-types'
 import AutoHeightImage from 'react-native-auto-height-image'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -134,40 +134,50 @@ class ImgManipulator extends Component {
             // console.log('OUT OF BOUNDS X', isOutOfBoundsX)
             const oldURI = photo.uri
             const { onPictureChoosed } = this.props
-            if (cropObj.height > 0 && cropObj.width > 0) {
-                ImageManipulator.manipulateAsync(
-                    photo.uri,
-                    [{
-                        crop: cropObj,
-                    }],
-                    { format: 'png' },
-                ).then((manipResult) => {
-                    this.onToggleModal()
-                    onPictureChoosed(manipResult.uri)
-                    // setTimeout(() => {
-                    //     onPictureChoosed(oldURI)
-                    // }, 2000)
-                })
-            }
+            FileSystem.downloadAsync(
+                photo.uri,
+                FileSystem.documentDirectory + 'image',
+            ).then(({ uri }) => {
+                if (cropObj.height > 0 && cropObj.width > 0) {
+                    ImageManipulator.manipulateAsync(
+                        uri,
+                        [{
+                            crop: cropObj,
+                        }],
+                        { format: 'png' },
+                    ).then((manipResult) => {
+                        this.onToggleModal()
+                        onPictureChoosed(manipResult.uri)
+                        // setTimeout(() => {
+                        //     onPictureChoosed(oldURI)
+                        // }, 2000)
+                    }).catch(error => console.log(error))
+                }
+            }).catch(error => console.log(error))
         })
         this.setState({ cropMode: false })
     }
 
     onRotateImage = () => {
         const { onPictureChoosed, photo } = this.props
-        Image.getSize(photo.uri, (width2, height2) => {
-            ImageManipulator.manipulateAsync(photo.uri, [{
-                rotate: -90,
-            }, {
-                resize: {
-                    width: height2,
-                    height: width2,
-                },
-            }], {
-                compress: 1,
-            }).then((rotPhoto) => {
-                onPictureChoosed(rotPhoto.uri)
-                this.setState({ uri: rotPhoto.uri })
+        FileSystem.downloadAsync(
+            photo.uri,
+            FileSystem.documentDirectory + 'image',
+        ).then(({ uri }) => {
+            Image.getSize(uri, (width2, height2) => {
+                ImageManipulator.manipulateAsync(uri, [{
+                    rotate: -90,
+                }, {
+                    resize: {
+                        width: height2,
+                        height: width2,
+                    },
+                }], {
+                    compress: 1,
+                }).then((rotPhoto) => {
+                    onPictureChoosed(rotPhoto.uri)
+                    this.setState({ uri: rotPhoto.uri })
+                })
             })
         })
     }
