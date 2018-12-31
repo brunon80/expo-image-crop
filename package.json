@@ -1,12 +1,9 @@
 {
   "name": "expo-image-crop",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Crop and rotate image without detach your expo project!",
   "main": "index.js",
   "dependencies": {
-    "expo": "*",
-    "react": "*",
-    "react-native": "*",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.11.1",
     "eslint-config-airbnb": "^17.1.0",
