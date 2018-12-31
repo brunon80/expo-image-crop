@@ -78,3 +78,8 @@ export default class App extends React.Component {
 * Crop and rotate image with `Expo.ImageManipulator`
 
 ## If you have some problem open a issue
+
+## TO DO
+
+- [ ] [Android / IOS] Detect touches with more precision (Drag / Resizing)
+- [ ] [Android / IOS] Better crop mask
