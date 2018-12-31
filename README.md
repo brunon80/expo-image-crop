@@ -8,7 +8,10 @@
    <br/>
    <br/>
    <a href="https://github.com/brunon80/expo-image-crop"><img alt="npm version" src="https://badge.fury.io/js/expo-image-crop.svg"/>
+   <a href="https://github.com/brunon80/expo-image-crop"><img alt="npm version" src="https://img.shields.io/badge/platform-ios%2Fandroid-blue.svg"/>
+   <a href="https://github.com/brunon80/expo-image-crop"><img alt="npm version" src="https://img.shields.io/badge/license-MIT-lightgrey.svg"/>
    <p align="center">
+   
   <a href="https://exp.host/@koruja/expo-image-crop">Open on your device!</a>
 </p>
 </a>

@@ -1,6 +1,6 @@
 {
   "name": "expo-image-crop",
-  "version": "0.1.95",
+  "version": "0.1.96",
   "description": "Crop and rotate image without detach your expo project!",
   "main": "index.js",
   "dependencies": {
