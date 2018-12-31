@@ -7,7 +7,7 @@
    <br/>
    <br/>
    <br/>
-   <a href="https://github.com/brunon80/expo-image-crop"><img alt="npm version" src="https://badge.fury.io/js/rn-pdf-reader-js.svg"/>
+   <a href="https://github.com/brunon80/expo-image-crop"><img alt="npm version" src="https://badge.fury.io/js/expo-image-crop.svg"/>
 </a>
 </p>
 
