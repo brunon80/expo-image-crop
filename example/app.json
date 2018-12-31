@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "example",
-    "slug": "example",
+    "name": "expo-image-crop",
+    "slug": "expo-image-crop",
     "privacy": "public",
     "sdkVersion": "31.0.0",
     "platforms": [
