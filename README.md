@@ -8,6 +8,9 @@
    <br/>
    <br/>
    <a href="https://github.com/brunon80/expo-image-crop"><img alt="npm version" src="https://badge.fury.io/js/expo-image-crop.svg"/>
+   <p align="center">
+  <a href="https://exp.host/@koruja/expo-image-crop">Open on your device!</a>
+</p>
 </a>
 </p>
 
