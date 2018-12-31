@@ -1,6 +1,6 @@
 {
   "name": "expo-image-crop",
-  "version": "0.1.91",
+  "version": "0.1.93",
   "description": "Crop and rotate image without detach your expo project!",
   "main": "index.js",
   "dependencies": {
@@ -18,5 +18,15 @@
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
   },
-  "private": false
+  "private": false,
+  "keywords": ["expo", "react-native", "crop", "image", "rotate"],
+  "license": "MIT",
+  "homepage": "https://github.com/brunon80/expo-image-crop",
+  "bugs": {
+    "url": "https://github.com/brunon80/expo-image-crop/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brunon80/expo-image-crop"
+  }
 }
