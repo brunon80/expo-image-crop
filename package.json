@@ -1,0 +1,25 @@
+{
+  "name": "expo-image-crop",
+  "version": "0.1.7",
+  "description": "Crop and rotate image without detach your expo project!",
+  "main": "index.js",
+  "dependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.11.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.12.0",
+    "prop-types": "^15.6.2",
+    "react-native-animatable": "^1.3.0",
+    "react-native-auto-height-image": "^1.0.5"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^5.0.0"
+  },
+  "private": false
+}
