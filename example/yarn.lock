@@ -2504,10 +2504,10 @@ expo-gl@~1.1.0:
     expo-file-system-interface "~1.1.0"
     expo-gl-cpp "~1.1.0"
 
-expo-image-crop@^0.1.9:
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/expo-image-crop/-/expo-image-crop-0.1.9.tgz#bfa3eb5112dcc1c69927f3c8a2054a98f80dd3d3"
-  integrity sha512-T4w/T/cTozOtS+r5VZ+MZ3iJLI+BYaiuVjjPZdil0pvjcn8nmWL6UtVR0gAxFT9hgCuZ8ZGipEHZ3zTlNjNmsg==
+expo-image-crop@^0.1.99:
+  version "0.1.99"
+  resolved "https://registry.yarnpkg.com/expo-image-crop/-/expo-image-crop-0.1.99.tgz#aa6db5de7ef4d9da0b3068bdf4b4d286bf0a1ce4"
+  integrity sha512-UtdROmIRSrEUvIlOGo/OElaeDbnLnrd0I5PVz62sc9+t2VMHUT8JmL4UJLqkOIG7/97w0LRzTGzL2amf9i1mmA==
   dependencies:
     babel-eslint "^10.0.1"
     eslint "^5.11.1"

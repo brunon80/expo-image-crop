@@ -19,7 +19,13 @@
     "babel-preset-expo": "^5.0.0"
   },
   "private": false,
-  "keywords": ["expo", "react-native", "crop", "image", "rotate"],
+  "keywords": [
+    "expo",
+    "react-native",
+    "crop",
+    "image",
+    "rotate"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/brunon80/expo-image-crop",
   "bugs": {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Dimensions, Button, ImageBackground } from 'react-native'
-import {ImageManipulator} from 'expo-image-crop'
+import ImageManipulator from './manipulator/ImageManipulator'
 
 export default class App extends React.Component {
   state = {
