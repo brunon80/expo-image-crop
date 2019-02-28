@@ -316,6 +316,7 @@ class ImgManipulator extends Component {
                                     borderWidth: 3,
                                     borderColor: 'yellow',
                                     flex: 1,
+                                    minHeight: 100,
                                     width: this.maxSizes.width,
                                     height: this.maxSizes.height,
                                     position: 'absolute',
