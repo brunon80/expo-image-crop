@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {
-    PanResponder, Dimensions, Image, ScrollView, Modal, View, Text,
+    PanResponder, Dimensions, Image, ScrollView, Modal, View, Text, SafeAreaView
 } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import { ImageManipulator, FileSystem } from 'expo'
@@ -253,7 +253,7 @@ class ImgManipulator extends Component {
                     console.log('Modal has been closed.')
                 }}
             >
-                <View
+                <SafeAreaView
                     style={{
                         width, backgroundColor: 'black', flexDirection: 'row', justifyContent: 'space-between',
                     }}
@@ -275,7 +275,7 @@ class ImgManipulator extends Component {
                             )
                             : this.renderButtom('Done', this.onCropImage, 'check')
                     }
-                </View>
+                </SafeAreaView>
                 <View style={{ flex: 1, backgroundColor: 'black' }}>
                     <ScrollView
                         style={{ position: 'relative', flex: 1 }}
