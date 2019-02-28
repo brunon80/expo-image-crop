@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {
-    PanResponder, Dimensions, Image, ScrollView, Modal, View, Text,
+    PanResponder, Dimensions, Image, ScrollView, Modal, View, Text, SafeAreaView
 } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import { ImageManipulator, FileSystem } from 'expo'
@@ -17,10 +17,10 @@ const { width } = Dimensions.get('window')
 class ImgManipulator extends Component {
     constructor(props) {
         super(props)
-
+        const { photo } = this.props
         this.state = {
             cropMode: false,
-            uri: '',
+            uri: photo.uri,
         }
 
         this.scrollOffset = 0
@@ -87,8 +87,9 @@ class ImgManipulator extends Component {
     onCropImage = () => {
         let imgWidth
         let imgHeight
-        const { photo } = this.props
-        Image.getSize(photo.uri, (width2, height2) => {
+        // const { photo } = this.props
+        const { uri } = this.state
+        Image.getSize(uri, (width2, height2) => {
             imgWidth = width2
             imgHeight = height2
             const heightRatio = this.currentSize.height / this.maxSizes.height
@@ -135,20 +136,21 @@ class ImgManipulator extends Component {
             // console.log('OUT OF BOUNDS Y', isOutOfBoundsY)
             // console.log('offsetMaxWidth', offsetMaxWidth)
             // console.log('OUT OF BOUNDS X', isOutOfBoundsX)
-            const oldURI = photo.uri
-            const { onPictureChoosed } = this.props
-            const isRemote = /^(http|https|ftp)?(?:[\:\/]*)([a-z0-9\.-]*)(?:\:([0-9]+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/.test(photo.uri)
+            // const oldURI = uri
+            // const { onPictureChoosed } = this.props
+            const isRemote = /^(http|https|ftp)?(?:[\:\/]*)([a-z0-9\.-]*)(?:\:([0-9]+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/.test(uri)
             if (!isRemote) {
                 if (cropObj.height > 0 && cropObj.width > 0) {
                     ImageManipulator.manipulateAsync(
-                        photo.uri,
+                        uri,
                         [{
                             crop: cropObj,
                         }],
                         { format: 'png' },
                     ).then((manipResult) => {
-                        this.onToggleModal()
-                        onPictureChoosed(manipResult.uri)
+                        this.setState({ uri: manipResult.uri, cropMode: false })
+                        // this.onToggleModal()
+                        // onPictureChoosed(manipResult.uri)
                         // setTimeout(() => {
                         //     onPictureChoosed(oldURI)
                         // }, 2000)
@@ -156,19 +158,20 @@ class ImgManipulator extends Component {
                 }
             } else {
                 FileSystem.downloadAsync(
-                    photo.uri,
+                    uri,
                     FileSystem.documentDirectory + 'image',
-                ).then(({ uri }) => {
+                ).then((localFile) => {
                     if (cropObj.height > 0 && cropObj.width > 0) {
                         ImageManipulator.manipulateAsync(
-                            uri,
+                            localFile.uri,
                             [{
                                 crop: cropObj,
                             }],
                             { format: 'png' },
                         ).then((manipResult) => {
-                            this.onToggleModal()
-                            onPictureChoosed(manipResult.uri)
+                            this.setState({ uri: manipResult.uri, cropMode: false })
+                            // this.onToggleModal()
+                            // onPictureChoosed(manipResult.uri)
                             // setTimeout(() => {
                             //     onPictureChoosed(oldURI)
                             // }, 2000)
@@ -181,11 +184,12 @@ class ImgManipulator extends Component {
     }
 
     onRotateImage = () => {
-        const { onPictureChoosed, photo } = this.props
-        const isRemote = /^(http|https|ftp)?(?:[\:\/]*)([a-z0-9\.-]*)(?:\:([0-9]+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/.test(photo.uri)
+        // const { onPictureChoosed } = this.props
+        const { uri } = this.state
+        const isRemote = /^(http|https|ftp)?(?:[\:\/]*)([a-z0-9\.-]*)(?:\:([0-9]+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/.test(uri)
         if (!isRemote) {
-            Image.getSize(photo.uri, (width2, height2) => {
-                ImageManipulator.manipulateAsync(photo.uri, [{
+            Image.getSize(uri, (width2, height2) => {
+                ImageManipulator.manipulateAsync(uri, [{
                     rotate: -90,
                 }, {
                     resize: {
@@ -195,16 +199,16 @@ class ImgManipulator extends Component {
                 }], {
                     compress: 1,
                 }).then((rotPhoto) => {
-                    onPictureChoosed(rotPhoto.uri)
+                    // onPictureChoosed(rotPhoto.uri)
                     this.setState({ uri: rotPhoto.uri })
                 })
             })
         } else {
             FileSystem.downloadAsync(
-                photo.uri,
-                FileSystem.documentDirectory + 'image.jpg',
-            ).then(({ uri }) => {
-                Image.getSize(uri, (width2, height2) => {
+                uri,
+                FileSystem.documentDirectory + 'image',
+            ).then((localFile) => {
+                Image.getSize(localFile.uri, (width2, height2) => {
                     ImageManipulator.manipulateAsync(uri, [{
                         rotate: -90,
                     }, {
@@ -215,7 +219,7 @@ class ImgManipulator extends Component {
                     }], {
                         compress: 1,
                     }).then((rotPhoto) => {
-                        onPictureChoosed(rotPhoto.uri)
+                        // onPictureChoosed(rotPhoto.uri)
                         this.setState({ uri: rotPhoto.uri })
                     })
                 })
@@ -237,7 +241,7 @@ class ImgManipulator extends Component {
     )
 
     render() {
-        const { isVisible, onPictureChoosed, photo } = this.props
+        const { isVisible, onPictureChoosed } = this.props
         const {
             uri, cropMode,
         } = this.state
@@ -252,7 +256,7 @@ class ImgManipulator extends Component {
                     console.log('Modal has been closed.')
                 }}
             >
-                <View
+                <SafeAreaView
                     style={{
                         width, backgroundColor: 'black', flexDirection: 'row', justifyContent: 'space-between',
                     }}
@@ -274,7 +278,7 @@ class ImgManipulator extends Component {
                             )
                             : this.renderButtom('Done', this.onCropImage, 'check')
                     }
-                </View>
+                </SafeAreaView>
                 <View style={{ flex: 1, backgroundColor: 'black' }}>
                     <ScrollView
                         style={{ position: 'relative', flex: 1 }}
@@ -286,7 +290,7 @@ class ImgManipulator extends Component {
                     >
                         <AutoHeightImage
                             style={{ backgroundColor: 'black' }}
-                            source={{ uri: photo.uri }}
+                            source={{ uri }}
                             resizeMode="contain"
                             width={width}
                             onLayout={(event) => {
