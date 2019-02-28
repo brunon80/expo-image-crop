@@ -49,7 +49,9 @@ class ImgManipulator extends Component {
             onMoveShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponderCapture: () => true,
 
-            onPanResponderGrant: () => {},
+            onPanResponderGrant: () => {
+                this.scrollView.setNativeProps({ scrollEnabled: false })
+            },
             onPanResponderMove: (evt, gestureState) => {
                 if (!this.isResizing && gestureState.x0 < this.currentPos.left + this.currentSize.width * 0.9) {
                     this.square.transitionTo({ left: gestureState.moveX - this.currentSize.width / 2, top: gestureState.moveY + this.scrollOffset - this.currentSize.height / 2 - 45 /**  OFFSET */ }, 0)
@@ -62,6 +64,7 @@ class ImgManipulator extends Component {
             },
             onPanResponderTerminationRequest: () => true,
             onPanResponderRelease: () => {
+                this.scrollView.setNativeProps({ scrollEnabled: true })
                 this.isResizing = false
             // The user has released all touches while this view is the
             // responder. This typically means a gesture has succeeded
@@ -279,6 +282,7 @@ class ImgManipulator extends Component {
                         minimumZoomScale={0.5}
                         onScroll={this.onHandleScroll}
                         bounces={false}
+                        ref={(c) => { this.scrollView = c; }}
                     >
                         <AutoHeightImage
                             style={{ backgroundColor: 'black' }}
