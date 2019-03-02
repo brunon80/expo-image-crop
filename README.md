@@ -1,5 +1,5 @@
 <h1 align="center">Expo image manipulator</h1>
-<p align="center">Multi plataform 🚀</p>
+<p align="center">Multi platform 🚀</p>
 
 <p align="center">
    <img width="250" src="https://giant.gfycat.com/ElaborateSpicyHoneycreeper.gif" />
