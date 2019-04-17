@@ -23,7 +23,18 @@ class ImgManipulator extends Component {
             uri: photo.uri,
         }
 
-        this.scrollOffset = 0
+        this.scrollOffset = 0;
+
+        if(photo.width || photo.height){
+            this.trueSize = {}
+            if(photo.width){
+                this.trueSize.width = photo.width;
+            }
+            if(photo.height){
+                this.trueSize.height = photo.height;
+            }
+        }
+        
 
         this.currentPos = {
             left: 0,
@@ -89,9 +100,9 @@ class ImgManipulator extends Component {
         let imgHeight
         // const { photo } = this.props
         const { uri } = this.state
-        Image.getSize(uri, (width2, height2) => {
-            imgWidth = width2
-            imgHeight = height2
+        Image.getSize(uri, (width2, height2) => {            
+            imgWidth = this.trueSize.width || width2;
+            imgHeight = this.trueSize.height || height2;
             const heightRatio = this.currentSize.height / this.maxSizes.height
             const offsetHeightRatio = this.currentPos.top / this.maxSizes.height
 
@@ -193,8 +204,8 @@ class ImgManipulator extends Component {
                     rotate: -90,
                 }, {
                     resize: {
-                        width: height2,
-                        height: width2,
+                        width: this.trueSize.height || height2,
+                        height: this.trueSize.width || width2,
                     },
                 }], {
                     compress: 1,
@@ -213,8 +224,8 @@ class ImgManipulator extends Component {
                         rotate: -90,
                     }, {
                         resize: {
-                            width: height2,
-                            height: width2,
+                            width: this.trueSize.height || height2,
+                            height: this.trueSize.width || width2,
                         },
                     }], {
                         compress: 1,
