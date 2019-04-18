@@ -15,6 +15,12 @@ import HybridTouch from '../HybridTouch'
 const { width } = Dimensions.get('window')
 
 class ImgManipulator extends Component {
+    get trueWidth() {
+        return this.trueSize && this.trueSize.width ? this.trueSize.width : null;
+    }
+    get trueHeight() {
+        return this.trueSize && this.trueSize.height ? this.trueSize.height : null;
+    }
     constructor(props) {
         super(props)
         const { photo } = this.props
@@ -23,7 +29,17 @@ class ImgManipulator extends Component {
             uri: photo.uri,
         }
 
-        this.scrollOffset = 0
+        this.scrollOffset = 0;
+
+        this.trueSize = {};
+        if (photo.width || photo.height) {
+            if (photo.width) {
+                this.trueSize.width = photo.width;
+            }
+            if (photo.height) {
+                this.trueSize.height = photo.height;
+            }
+        }
 
         this.currentPos = {
             left: 0,
@@ -89,9 +105,9 @@ class ImgManipulator extends Component {
         let imgHeight
         // const { photo } = this.props
         const { uri } = this.state
-        Image.getSize(uri, (width2, height2) => {
-            imgWidth = width2
-            imgHeight = height2
+        Image.getSize(uri, (width2, height2) => {            
+            imgWidth = this.trueWidth || width2;
+            imgHeight = this.trueHeight || height2;
             const heightRatio = this.currentSize.height / this.maxSizes.height
             const offsetHeightRatio = this.currentPos.top / this.maxSizes.height
 
@@ -193,8 +209,8 @@ class ImgManipulator extends Component {
                     rotate: -90,
                 }, {
                     resize: {
-                        width: height2,
-                        height: width2,
+                          width: this.trueWidth || width2,
+                          height: this.trueHeight || height2,
                     },
                 }], {
                     compress: 1,
@@ -213,8 +229,8 @@ class ImgManipulator extends Component {
                         rotate: -90,
                     }, {
                         resize: {
-                            width: height2,
-                            height: width2,
+                             width: this.trueWidth || width2,
+                             height: this.trueHeight || height2,
                         },
                     }], {
                         compress: 1,
