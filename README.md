@@ -67,8 +67,8 @@ export default class App extends React.Component {
 * onPictureChoosed: `function` - Callback where is passed image edited as parameter
 * photo: `object`
     * uri: `string` - uri of image to be edited
-    * width: `string` - width of image to be edited (optional, used for large images due android bug, see: facebook/react-native#22145)
-    * height: `string` - height of image to be edited (optional, used for large images due android bug, see: facebook/react-native#22145)
+    * width: `number` - width of image to be edited (optional, used for large images due android bug, see: facebook/react-native#22145)
+    * height: `number` - height of image to be edited (optional, used for large images due android bug, see: facebook/react-native#22145)
 * onToggleModal: `function` - Callback called when modal is dismissed
 
 ## Requirements
