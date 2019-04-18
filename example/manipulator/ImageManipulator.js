@@ -15,6 +15,12 @@ import HybridTouch from '../HybridTouch'
 const { width } = Dimensions.get('window')
 
 class ImgManipulator extends Component {
+    get trueWidth() {
+        return this.trueSize && this.trueSize.width ? this.trueSize.width : null;
+    }
+    get trueHeight() {
+        return this.trueSize && this.trueSize.height ? this.trueSize.height : null;
+    }
     constructor(props) {
         super(props)
         const { photo } = this.props
@@ -25,16 +31,15 @@ class ImgManipulator extends Component {
 
         this.scrollOffset = 0;
 
-        if(photo.width || photo.height){
-            this.trueSize = {}
-            if(photo.width){
+        this.trueSize = {};
+        if (photo.width || photo.height) {
+            if (photo.width) {
                 this.trueSize.width = photo.width;
             }
-            if(photo.height){
+            if (photo.height) {
                 this.trueSize.height = photo.height;
             }
         }
-        
 
         this.currentPos = {
             left: 0,
@@ -101,8 +106,8 @@ class ImgManipulator extends Component {
         // const { photo } = this.props
         const { uri } = this.state
         Image.getSize(uri, (width2, height2) => {            
-            imgWidth = this.trueSize.width || width2;
-            imgHeight = this.trueSize.height || height2;
+            imgWidth = this.trueWidth || width2;
+            imgHeight = this.trueHeight || height2;
             const heightRatio = this.currentSize.height / this.maxSizes.height
             const offsetHeightRatio = this.currentPos.top / this.maxSizes.height
 
@@ -204,8 +209,8 @@ class ImgManipulator extends Component {
                     rotate: -90,
                 }, {
                     resize: {
-                        width: this.trueSize.height || height2,
-                        height: this.trueSize.width || width2,
+                          width: this.trueWidth || width2,
+                          height: this.trueHeight || height2,
                     },
                 }], {
                     compress: 1,
@@ -224,8 +229,8 @@ class ImgManipulator extends Component {
                         rotate: -90,
                     }, {
                         resize: {
-                            width: this.trueSize.height || height2,
-                            height: this.trueSize.width || width2,
+                             width: this.trueWidth || width2,
+                             height: this.trueHeight || height2,
                         },
                     }], {
                         compress: 1,
