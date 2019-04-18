@@ -2,7 +2,7 @@
 <p align="center">Multi platform 🚀</p>
 
 <p align="center">
-   <img width="250" src="https://giant.gfycat.com/ElaborateSpicyHoneycreeper.gif" />
+   <img width="250" src="https://giant.gfycat.com/ElaborateSpicyHoneycreeper.gif"/>
    <br/>
    <br/>
    <br/>
