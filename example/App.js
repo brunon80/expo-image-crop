@@ -17,10 +17,7 @@ export default class App extends React.Component {
   _pickImage = async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
       if (status === 'granted') {
-          const result = await ImagePicker.launchImageLibraryAsync({
-              allowsEditing: true,
-              aspect: [4, 3],
-          })
+          const result = await ImagePicker.launchImageLibraryAsync()
 
           if (!result.cancelled) {
               this.setState({ uri: result.uri })
@@ -31,10 +28,7 @@ export default class App extends React.Component {
   _pickCameraImage = async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA)
       if (status === 'granted') {
-          const result = await ImagePicker.launchCameraAsync({
-              allowsEditing: true,
-              aspect: [4, 3],
-          })
+          const result = await ImagePicker.launchCameraAsync()
 
           if (!result.cancelled) {
               this.setState({ uri: result.uri })
