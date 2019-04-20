@@ -230,11 +230,11 @@ class ImgManipulator extends Component {
 
     render() {
         const {
-          isVisible,
-          onPictureChoosed,
-          borderColor = 'yellow',
-          allowRotate = true,
-        } = this.props;
+            isVisible,
+            onPictureChoosed,
+            borderColor = 'yellow',
+            allowRotate = true,
+        } = this.props
         const {
             uri, cropMode,
         } = this.state
@@ -262,8 +262,8 @@ class ImgManipulator extends Component {
                                     {this.renderButtom('Crop', () => {
                                         this.setState({ cropMode: true })
                                     }, 'crop')}
-                                     {allowRotate &&
-                                        this.renderButtom('Rotate', this.onRotateImage, 'rotate-left')}
+                                    {allowRotate
+                                        && this.renderButtom('Rotate', this.onRotateImage, 'rotate-left')}
                                     {this.renderButtom('Done', () => {
                                         onPictureChoosed(uri)
                                         this.onToggleModal()
@@ -306,21 +306,21 @@ class ImgManipulator extends Component {
                                 ref={(ref) => { this.square = ref }}
                                 {...this._panResponder.panHandlers}
                                 style={{
-                                borderStyle: 'dashed',
-                                borderRadius: 5,
-                                borderWidth: 3,
-                                borderColor,
-                                flex: 1,
-                                minHeight: 100,
-                                width: this.maxSizes.width,
-                                height: this.maxSizes.height,
-                                position: 'absolute',
-                                maxHeight: this.maxSizes.height,
-                                maxWidth: this.maxSizes.width,
-                                backgroundColor: 'rgba(0,0,0,0.5)',
-                                display: 'flex',
-                                justifyContent: 'flex-end',
-                                alignItems: 'flex-end',
+                                    borderStyle: 'dashed',
+                                    borderRadius: 5,
+                                    borderWidth: 3,
+                                    borderColor,
+                                    flex: 1,
+                                    minHeight: 100,
+                                    width: this.maxSizes.width,
+                                    height: this.maxSizes.height,
+                                    position: 'absolute',
+                                    maxHeight: this.maxSizes.height,
+                                    maxWidth: this.maxSizes.width,
+                                    backgroundColor: 'rgba(0,0,0,0.5)',
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'flex-end',
                                 }}
                             >
                                 <View
