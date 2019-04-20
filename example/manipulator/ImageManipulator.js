@@ -229,7 +229,12 @@ class ImgManipulator extends Component {
 
 
     render() {
-        const { isVisible, onPictureChoosed } = this.props
+        const {
+          isVisible,
+          onPictureChoosed,
+          borderColor = 'yellow',
+          allowRotate = true,
+        } = this.props;
         const {
             uri, cropMode,
         } = this.state
@@ -257,7 +262,8 @@ class ImgManipulator extends Component {
                                     {this.renderButtom('Crop', () => {
                                         this.setState({ cropMode: true })
                                     }, 'crop')}
-                                    {this.renderButtom('Rotate', this.onRotateImage, 'rotate-left')}
+                                     {allowRotate &&
+                                        this.renderButtom('Rotate', this.onRotateImage, 'rotate-left')}
                                     {this.renderButtom('Done', () => {
                                         onPictureChoosed(uri)
                                         this.onToggleModal()
@@ -300,20 +306,34 @@ class ImgManipulator extends Component {
                                 ref={(ref) => { this.square = ref }}
                                 {...this._panResponder.panHandlers}
                                 style={{
-                                    borderStyle: 'dashed',
-                                    borderRadius: 5,
-                                    borderWidth: 3,
-                                    borderColor: 'yellow',
-                                    flex: 1,
-                                    minHeight: 100,
-                                    width: this.maxSizes.width,
-                                    height: this.maxSizes.height,
-                                    position: 'absolute',
-                                    maxHeight: this.maxSizes.height,
-                                    maxWidth: this.maxSizes.width,
-                                    backgroundColor: 'rgba(0,0,0,0.5)',
+                                borderStyle: 'dashed',
+                                borderRadius: 5,
+                                borderWidth: 3,
+                                borderColor,
+                                flex: 1,
+                                minHeight: 100,
+                                width: this.maxSizes.width,
+                                height: this.maxSizes.height,
+                                position: 'absolute',
+                                maxHeight: this.maxSizes.height,
+                                maxWidth: this.maxSizes.width,
+                                backgroundColor: 'rgba(0,0,0,0.5)',
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                alignItems: 'flex-end',
                                 }}
-                            />
+                            >
+                                <View
+                                    style={{
+                                        backgroundColor: borderColor,
+                                        height: 30,
+                                        width: 30,
+                                        opacity: 0.5,
+                                    }}
+                                >
+                                    <Icon size={30} name="arrow-top-left" color="white" />
+                                </View>
+                            </Animatable.View>
                         )
                         }
                     </ScrollView>
