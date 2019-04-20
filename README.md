@@ -70,6 +70,8 @@ export default class App extends React.Component {
     * width: `number` - width of image to be edited (optional, used for large images due android bug, see: facebook/react-native#22145)
     * height: `number` - height of image to be edited (optional, used for large images due android bug, see: facebook/react-native#22145)
 * onToggleModal: `function` - Callback called when modal is dismissed
+* borderColor: `string` - Color for crop mask border
+* allowRotate: `Bool` - Show rotate option
 
 ## Requirements
 * Use it into Expo app (from expo client, Standalone app or ExpoKit app).
