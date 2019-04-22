@@ -20,6 +20,7 @@ class ImgManipulator extends Component {
         const { photo } = this.props
         this.state = {
             cropMode: false,
+            processing: false,
             uri: photo.uri,
         }
 
@@ -111,6 +112,7 @@ class ImgManipulator extends Component {
     }
 
     onCropImage = () => {
+        this.setState({ processing: true });
         let imgWidth
         let imgHeight
         const { uri } = this.state
@@ -128,10 +130,9 @@ class ImgManipulator extends Component {
                     uriToCrop = response.uri
                 }
                 const uriCroped = await this.crop(cropObj, uriToCrop)
-                this.setState({ uri: uriCroped, cropMode: false })
+                this.setState({ uri: uriCroped, cropMode: false, processing: false })
             }
         })
-        this.setState({ cropMode: false })
     }
 
     onRotateImage = async () => {
@@ -270,7 +271,11 @@ class ImgManipulator extends Component {
                                     }, 'check')}
                                 </View>
                             )
-                            : this.renderButtom('Done', this.onCropImage, 'check')
+                            : this.renderButtom(
+                                this.state.processing ? 'processing' : 'Done',
+                                this.onCropImage,
+                                this.state.processing ? 'progress-check' : 'check'
+                              )
                     }
                 </SafeAreaView>
                 <View style={{ flex: 1, backgroundColor: 'black' }}>
