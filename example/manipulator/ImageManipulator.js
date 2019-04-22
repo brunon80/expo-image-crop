@@ -26,6 +26,7 @@ class ImgManipulator extends Component {
         const { photo } = this.props
         this.state = {
             cropMode: false,
+            processing: false,
             uri: photo.uri,
         }
 
@@ -101,6 +102,7 @@ class ImgManipulator extends Component {
     }
 
     onCropImage = () => {
+        this.setState({ processing: true });
         let imgWidth
         let imgHeight
         // const { photo } = this.props
@@ -164,13 +166,20 @@ class ImgManipulator extends Component {
                         }],
                         { format: 'png' },
                     ).then((manipResult) => {
-                        this.setState({ uri: manipResult.uri, cropMode: false })
+                        this.setState({ 
+                            uri: manipResult.uri, 
+                            cropMode: false, 
+                            processing: false, 
+                        })
                         // this.onToggleModal()
                         // onPictureChoosed(manipResult.uri)
                         // setTimeout(() => {
                         //     onPictureChoosed(oldURI)
                         // }, 2000)
-                    }).catch(error => console.log(error))
+                    }).catch(error => {
+                        console.log(error);
+                        this.setState({ cropMode: false. processing: false });
+                      });
                 }
             } else {
                 FileSystem.downloadAsync(
@@ -185,18 +194,27 @@ class ImgManipulator extends Component {
                             }],
                             { format: 'png' },
                         ).then((manipResult) => {
-                            this.setState({ uri: manipResult.uri, cropMode: false })
+                            this.setState({ 
+                                uri: manipResult.uri, 
+                                cropMode: false, 
+                                processing: false, 
+                            })
                             // this.onToggleModal()
                             // onPictureChoosed(manipResult.uri)
                             // setTimeout(() => {
                             //     onPictureChoosed(oldURI)
                             // }, 2000)
-                        }).catch(error => console.log(error))
+                        }).catch(error => {
+                            console.log(error);
+                            this.setState({ cropMode: false, processing: false });
+                          });
                     }
-                }).catch(error => console.log(error))
+                }).catch(error => {
+                    console.log(error);
+                    this.setState({ cropMode: false, processing: false });
+                  });
             }
         })
-        this.setState({ cropMode: false })
     }
 
     onRotateImage = () => {
@@ -298,7 +316,11 @@ class ImgManipulator extends Component {
                                     }, 'check')}
                                 </View>
                             )
-                            : this.renderButtom('Done', this.onCropImage, 'check')
+                            : this.renderButtom(
+                                this.state.processing ? 'processing' : 'Done',
+                                this.onCropImage,
+                                this.state.processing ? 'progress-check' : 'check'
+                              )
                     }
                 </SafeAreaView>
                 <View style={{ flex: 1, backgroundColor: 'black' }}>
