@@ -1,5 +1,8 @@
 import React from 'react'
-import { Dimensions, Button, ImageBackground } from 'react-native'
+import {
+    Dimensions, Button, ImageBackground, View,
+} from 'react-native'
+import { ImagePicker, Permissions } from 'expo'
 import ImageManipulator from './manipulator/ImageManipulator'
 
 export default class App extends React.Component {
@@ -11,6 +14,28 @@ export default class App extends React.Component {
       const { isVisible } = this.state
       this.setState({ isVisible: !isVisible })
   }
+  _pickImage = async () => {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+      if (status === 'granted') {
+          const result = await ImagePicker.launchImageLibraryAsync()
+
+          if (!result.cancelled) {
+              this.setState({ uri: result.uri })
+          }
+      }
+  };
+
+  _pickCameraImage = async () => {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA)
+      if (status === 'granted') {
+          const result = await ImagePicker.launchCameraAsync()
+
+          if (!result.cancelled) {
+              this.setState({ uri: result.uri })
+          }
+      }
+  };
+
   render() {
       const { uri, isVisible } = this.state
       const { width, height } = Dimensions.get('window')
@@ -23,12 +48,21 @@ export default class App extends React.Component {
               source={{ uri }}
           >
               <Button title="Open Image Editor" onPress={() => this.setState({ isVisible: true })} />
-              <ImageManipulator
-                  photo={{ uri }}
-                  isVisible={isVisible}
-                  onPictureChoosed={uriM => this.setState({ uri: uriM })}
-                  onToggleModal={this.onToggleModal}
-              />
+              <View style={{ margin: 20 }} />
+              <Button title="Get Image from Image Library" onPress={() => this._pickImage()} />
+              <View style={{ margin: 20 }} />
+              <Button title="Take Picture" onPress={() => this._pickCameraImage()} />
+              {
+                  isVisible
+              && (
+                  <ImageManipulator
+                      photo={{ uri }}
+                      isVisible={isVisible}
+                      onPictureChoosed={uriM => this.setState({ uri: uriM })}
+                      onToggleModal={this.onToggleModal}
+                  />
+              )
+              }
           </ImageBackground>
       )
   }
