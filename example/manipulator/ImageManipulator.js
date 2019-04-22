@@ -112,7 +112,7 @@ class ImgManipulator extends Component {
     }
 
     onCropImage = () => {
-        this.setState({ processing: true });
+        this.setState({ processing: true })
         let imgWidth
         let imgHeight
         const { uri } = this.state
@@ -237,7 +237,9 @@ class ImgManipulator extends Component {
             allowRotate = true,
         } = this.props
         const {
-            uri, cropMode,
+            uri,
+            cropMode,
+            processing,
         } = this.state
         return (
             <Modal
@@ -272,10 +274,10 @@ class ImgManipulator extends Component {
                                 </View>
                             )
                             : this.renderButtom(
-                                this.state.processing ? 'processing' : 'Done',
+                                processing ? 'processing' : 'Done',
                                 this.onCropImage,
-                                this.state.processing ? 'progress-check' : 'check'
-                              )
+                                processing ? 'progress-check' : 'check',
+                            )
                     }
                 </SafeAreaView>
                 <View style={{ flex: 1, backgroundColor: 'black' }}>
