@@ -72,6 +72,7 @@ export default class App extends React.Component {
 * onToggleModal: `function` - Callback called when modal is dismissed
 * borderColor: `string` - Color for crop mask border
 * allowRotate: `Bool` - Show rotate option
+* pinchGestureEnabled: `Bool` - Disable/Enable pinch gesture
 
 ## Requirements
 * Use it into Expo app (from expo client, Standalone app or ExpoKit app).
