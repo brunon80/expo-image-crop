@@ -235,6 +235,7 @@ class ImgManipulator extends Component {
             onPictureChoosed,
             borderColor = 'yellow',
             allowRotate = true,
+            pinchGestureEnabled,
         } = this.props
         const {
             uri,
@@ -289,6 +290,7 @@ class ImgManipulator extends Component {
                         bounces={false}
                         ref={(c) => { this.scrollView = c }}
                         scrollEventThrottle={16}
+                        pinchGestureEnabled={pinchGestureEnabled}
                     >
                         <AutoHeightImage
                             style={{ backgroundColor: 'black' }}
