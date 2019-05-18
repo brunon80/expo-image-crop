@@ -30,7 +30,7 @@ class ImgManipulator extends Component {
       cropMode: false,
       processing: false,
       uri: photo.uri,
-      squareAspect: squareAspect === undefined ? true : squareAspect,
+      squareAspect: squareAspect,
     }
 
     this.scrollOffset = 0
