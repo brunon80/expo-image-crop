@@ -73,6 +73,7 @@ export default class App extends React.Component {
 * borderColor: `string` - Color for crop mask border
 * allowRotate: `Bool` - Show rotate option
 * pinchGestureEnabled: `Bool` - Disable/Enable pinch gesture
+* squareAspect: `Bool` - Disable/Enable the square aspect of crop mask
 
 ## Requirements
 * Use it into Expo app (from expo client, Standalone app or ExpoKit app).
@@ -87,4 +88,4 @@ export default class App extends React.Component {
 ## TO DO
 
 - [ ] [Android / IOS] Detect touches with more precision (Drag / Resizing)
-- [ ] [Android / IOS] Better crop mask
+- [ x ] [Android / IOS] Better crop mask
