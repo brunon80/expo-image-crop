@@ -384,6 +384,7 @@ rotate = async (uri, width2, height2) => {
           borderColor = '#a4a4a4',
           allowRotate = true,
           pinchGestureEnabled,
+          btnTexts,
       } = this.props
       const {
           uri,
@@ -411,19 +412,19 @@ rotate = async (uri, width2, height2) => {
                       !cropMode
                           ? (
                               <View style={{ flexDirection: 'row' }}>
-                                  {this.renderButtom('Crop', () => {
+                                  {this.renderButtom(btnTexts.crop, () => {
                                       this.setState({ cropMode: true })
                                   }, 'crop')}
                                   {allowRotate
-                    && this.renderButtom('Rotate', this.onRotateImage, 'rotate-left')}
-                                  {this.renderButtom('Done', () => {
+                    && this.renderButtom(btnTexts.rotate, this.onRotateImage, 'rotate-left')}
+                                  {this.renderButtom(btnTexts.done, () => {
                                       onPictureChoosed(uri)
                                       this.onToggleModal()
                                   }, 'check')}
                               </View>
                           )
                           : this.renderButtom(
-                              processing ? 'processing' : 'Done',
+                              processing ? btnTexts.processing : btnTexts.done,
                               this.onCropImage,
                               processing ? 'progress-check' : 'check',
                           )
@@ -649,11 +650,18 @@ export default ImgManipulator
 
 ImgManipulator.defaultProps = {
     onPictureChoosed: uri => console.log('URI:', uri),
+    btnTexts: {
+        crop: 'Crop',
+        rotate: 'Rotate',
+        done: 'Done',
+        processing: 'Processing',
+    },
 }
 
 ImgManipulator.propTypes = {
     isVisible: PropTypes.bool.isRequired,
     onPictureChoosed: PropTypes.func,
+    btnTexts: PropTypes.object,
     photo: PropTypes.object.isRequired,
     onToggleModal: PropTypes.func.isRequired,
 }

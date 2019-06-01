@@ -60,6 +60,14 @@ export default class App extends React.Component {
                       isVisible={isVisible}
                       onPictureChoosed={uriM => this.setState({ uri: uriM })}
                       onToggleModal={this.onToggleModal}
+                      btnTexts={
+                          {
+                              crop: 'Recortar',
+                              rotate: 'Rotacionar',
+                              done: 'Pronto',
+                              processing: 'Processando',
+                          }
+                      }
                   />
               )
               }

@@ -69,6 +69,11 @@ export default class App extends React.Component {
     * uri: `string` - uri of image to be edited
     * width: `number` - width of image to be edited (optional, used for large images due android bug, see: facebook/react-native#22145)
     * height: `number` - height of image to be edited (optional, used for large images due android bug, see: facebook/react-native#22145)
+* btnTexts: `object`
+    * crop: `string` - name for crop text
+    * rotate: `string` - name for rotate text
+    * done: `string` - name for done text
+    * processing: `string` - name for processing text
 * onToggleModal: `function` - Callback called when modal is dismissed
 * borderColor: `string` - Color for crop mask border
 * allowRotate: `Bool` - Show rotate option
