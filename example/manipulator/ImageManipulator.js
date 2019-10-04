@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import * as Animatable from 'react-native-animatable'
-import { ImageManipulator, FileSystem } from 'expo'
+import { FileSystem } from 'expo'
+import * as ImageManipulator from 'expo-image-manipulator';
 import PropTypes from 'prop-types'
 import AutoHeightImage from 'react-native-auto-height-image'
 // eslint-disable-next-line import/no-extraneous-dependencies
