@@ -22,6 +22,15 @@
 
 [PRs are welcome...](https://github.com/brunon80/expo-image-crop/pulls)
 
+>Updated to Expo SDK 35
+
+### Install Dependences
+- yarn add react-native-vector-icons
+- expo install expo-permissions
+- expo install expo-image-picker
+- expo install expo-file-system
+- expo install expo-image-manipulator
+
 ## Example
 
 ```javascript

@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import * as Animatable from 'react-native-animatable'
-import { ImageManipulator, FileSystem } from 'expo'
+import * as ImageManipulator from 'expo-image-manipulator'
+import * as FileSystem from 'expo-file-system'
 import PropTypes from 'prop-types'
 import AutoHeightImage from 'react-native-auto-height-image'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -407,28 +408,30 @@ rotate = async (uri, width2, height2) => {
                       width, backgroundColor: 'black', flexDirection: 'row', justifyContent: 'space-between',
                   }}
               >
-                  {this.renderButtom('', this.onToggleModal, 'arrow-left')}
-                  {
-                      !cropMode
-                          ? (
-                              <View style={{ flexDirection: 'row' }}>
-                                  {this.renderButtom(btnTexts.crop, () => {
-                                      this.setState({ cropMode: true })
-                                  }, 'crop')}
-                                  {allowRotate
+                  <ScrollView horizontal>
+                      {this.renderButtom('', this.onToggleModal, 'arrow-left')}
+                      {
+                          !cropMode
+                              ? (
+                                  <View style={{ flexDirection: 'row' }}>
+                                      {this.renderButtom(btnTexts.crop, () => {
+                                          this.setState({ cropMode: true })
+                                      }, 'crop')}
+                                      {allowRotate
                     && this.renderButtom(btnTexts.rotate, this.onRotateImage, 'rotate-left')}
-                                  {this.renderButtom(btnTexts.done, () => {
-                                      onPictureChoosed(uri)
-                                      this.onToggleModal()
-                                  }, 'check')}
-                              </View>
-                          )
-                          : this.renderButtom(
-                              processing ? btnTexts.processing : btnTexts.done,
-                              this.onCropImage,
-                              processing ? 'progress-check' : 'check',
-                          )
-                  }
+                                      {this.renderButtom(btnTexts.done, () => {
+                                          onPictureChoosed(uri)
+                                          this.onToggleModal()
+                                      }, 'check')}
+                                  </View>
+                              )
+                              : this.renderButtom(
+                                  processing ? btnTexts.processing : btnTexts.done,
+                                  this.onCropImage,
+                                  processing ? 'progress-check' : 'check',
+                              )
+                      }
+                  </ScrollView>
               </SafeAreaView>
               <View style={{ flex: 1, backgroundColor: 'black' }}>
                   <ScrollView

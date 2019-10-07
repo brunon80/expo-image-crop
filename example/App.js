@@ -2,7 +2,8 @@ import React from 'react'
 import {
     Dimensions, Button, ImageBackground, View,
 } from 'react-native'
-import { ImagePicker, Permissions } from 'expo'
+import * as ImagePicker from 'expo-image-picker'
+import * as Permissions from 'expo-permissions'
 import ImageManipulator from './manipulator/ImageManipulator'
 
 export default class App extends React.Component {
