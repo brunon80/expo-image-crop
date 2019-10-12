@@ -97,9 +97,12 @@ export default class App extends React.Component {
 ## Features
 * Crop and rotate image with `Expo.ImageManipulator`
 
+## Kown Issues
+* On some devices always only crops the upper left side of the image, [see here.](https://github.com/brunon80/expo-image-crop/issues/15)
+
 ## If you have some problem open a issue
 
 ## TO DO
 
 - [ ] [Android / IOS] Detect touches with more precision (Drag / Resizing)
-- [ x ] [Android / IOS] Better crop mask
+- [x] [Android / IOS] Better crop mask
