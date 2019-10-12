@@ -94,7 +94,7 @@ export default class App extends React.Component {
 ## Requirements
 * Use it into Expo app (from expo client, Standalone app or ExpoKit app).
 * Because we need to have access to `Expo.ImageManipulator`
-* Only Expo SDK 25 or Higher
+* Only Expo SDK 35 or Higher
 
 ## Features
 * Crop and rotate image with `Expo.ImageManipulator`
