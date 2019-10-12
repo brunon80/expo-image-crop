@@ -24,6 +24,8 @@
 
 >Updated to Expo SDK 35
 
+>New Crop UI
+
 ### Install Dependences
 - yarn add react-native-vector-icons
 - expo install expo-permissions
