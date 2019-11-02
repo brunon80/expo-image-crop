@@ -2,7 +2,7 @@
 <p align="center">Multi platform 🚀</p>
 
 <p align="center">
-   <img width="250" src="https://giant.gfycat.com/ElaborateSpicyHoneycreeper.gif"/>
+   <img width="250" src="./demo.gif"/>
    <br/>
    <br/>
    <br/>
@@ -22,9 +22,12 @@
 
 [PRs are welcome...](https://github.com/brunon80/expo-image-crop/pulls)
 
+>**Help Needed**: Remove flickering while resizing image, if you know why open a issue or a PR
+
 >Updated to Expo SDK 35
 
 >New Crop UI
+
 
 ### Install Dependences
 - yarn add react-native-vector-icons
@@ -90,6 +93,8 @@ export default class App extends React.Component {
 * allowRotate: `Bool` - Show rotate option
 * pinchGestureEnabled: `Bool` - Disable/Enable pinch gesture
 * squareAspect: `Bool` - Disable/Enable the square aspect of crop mask
+* dragVelocity: `number` - Ajustable drag velocity
+* resizeVelocity: `number` - Ajustable resize velocity
 
 ## Requirements
 * Use it into Expo app (from expo client, Standalone app or ExpoKit app).
