@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
-import ImageManipulator from './manipulator/ImageManipulator'
+import ImageManipulator from './manipulator/_ImageManipulator'
 
 export default class App extends React.Component {
   state = {
@@ -41,38 +41,38 @@ export default class App extends React.Component {
       const { uri, isVisible } = this.state
       const { width, height } = Dimensions.get('window')
       return (
-          <ImageBackground
-              resizeMode="contain"
-              style={{
-                  justifyContent: 'center', padding: 20, alignItems: 'center', height, width, backgroundColor: 'black',
-              }}
-              source={{ uri }}
-          >
-              <Button title="Open Image Editor" onPress={() => this.setState({ isVisible: true })} />
-              <View style={{ margin: 20 }} />
-              <Button title="Get Image from Image Library" onPress={() => this._pickImage()} />
-              <View style={{ margin: 20 }} />
-              <Button title="Take Picture" onPress={() => this._pickCameraImage()} />
-              {
-                  isVisible
-              && (
-                  <ImageManipulator
-                      photo={{ uri }}
-                      isVisible={isVisible}
-                      onPictureChoosed={uriM => this.setState({ uri: uriM })}
-                      onToggleModal={this.onToggleModal}
-                      btnTexts={
-                          {
-                              crop: 'Recortar',
-                              rotate: 'Rotacionar',
-                              done: 'Pronto',
-                              processing: 'Processando',
-                          }
-                      }
-                  />
-              )
+      //   <ImageBackground
+      //       resizeMode="contain"
+      //       style={{
+      //           justifyContent: 'center', padding: 20, alignItems: 'center', height, width, backgroundColor: 'black',
+      //       }}
+      //       source={{ uri }}
+      //   >
+      //       <Button title="Open Image Editor" onPress={() => this.setState({ isVisible: true })} />
+      //       <View style={{ margin: 20 }} />
+      //       <Button title="Get Image from Image Library" onPress={() => this._pickImage()} />
+      //       <View style={{ margin: 20 }} />
+      //       <Button title="Take Picture" onPress={() => this._pickCameraImage()} />
+      //       {
+      //           isVisible
+      //       && (
+          <ImageManipulator
+              photo={{ uri }}
+              isVisible={isVisible}
+              onPictureChoosed={uriM => this.setState({ uri: uriM })}
+              onToggleModal={this.onToggleModal}
+              btnTexts={
+                  {
+                      crop: 'Recortar',
+                      rotate: 'Rotacionar',
+                      done: 'Pronto',
+                      processing: 'Processando',
+                  }
               }
-          </ImageBackground>
+          />
       )
+      //       }
+      //   </ImageBackground>
+      //   )
   }
 }

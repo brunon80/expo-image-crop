@@ -1,4 +1,4 @@
-import ImageManipulator from './example/manipulator/ImageManipulator'
+import ImageManipulator from './example/manipulator/_ImageManipulator'
 
 export {
     ImageManipulator,
