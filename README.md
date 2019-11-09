@@ -67,7 +67,7 @@ export default class App extends React.Component {
               <ImageManipulator
                   photo={{ uri }}
                   isVisible={isVisible}
-                  onPictureChoosed={uriM => this.setState({ uri: uriM })}
+                  onPictureChoosed={({ uri: uriM }) => this.setState({ uri: uriM })}
                   onToggleModal={this.onToggleModal}
               />
           </ImageBackground>
@@ -90,11 +90,15 @@ export default class App extends React.Component {
     * processing: `string` - name for processing text
 * onToggleModal: `function` - Callback called when modal is dismissed
 * borderColor: `string` - Color for crop mask border
-* allowRotate: `Bool` - Show rotate option
-* pinchGestureEnabled: `Bool` - Disable/Enable pinch gesture
-* squareAspect: `Bool` - Disable/Enable the square aspect of crop mask
+* allowRotate: `boolean` - Show rotate option
+* pinchGestureEnabled: `boolean` - Disable/Enable pinch gesture
+* squareAspect: `boolean` - Disable/Enable the square aspect of crop mask
 * dragVelocity: `number` - Ajustable drag velocity
 * resizeVelocity: `number` - Ajustable resize velocity
+* saveOptions `object` - A map defining how modified image should be saved
+    * compress `number` - A value in range 0.0 - 1.0 specifying compression level of the result image. 1 means no compression (highest quality) and 0 the highest compression (lowest quality).
+    * format `string` - ImageManipulator.SaveFormat.{JPEG, PNG}. Specifies what type of compression should be used and what is the result file extension. SaveFormat.PNG compression is lossless but slower, SaveFormat.JPEG is faster but the image has visible artifacts. Defaults to SaveFormat.PNG.
+    * base64 `boolea` - Whether to also include the image data in Base64 format.
 
 ## Requirements
 * Use it into Expo app (from expo client, Standalone app or ExpoKit app).

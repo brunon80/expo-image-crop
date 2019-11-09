@@ -264,8 +264,10 @@ class ImgManipulator extends Component {
                     )
                     uriToCrop = response.uri
                 }
-                const uriCroped = await this.crop(cropObj, uriToCrop)
-                this.setState({ uri: uriCroped, cropMode: false, processing: false })
+                const { uri: uriCroped, base64 } = await this.crop(cropObj, uriToCrop)
+                this.setState({
+                    uri: uriCroped, base64, cropMode: false, processing: false,
+                })
             }
         })
     }
@@ -281,8 +283,8 @@ class ImgManipulator extends Component {
             uriToCrop = response.uri
         }
         Image.getSize(uri, async (width2, height2) => {
-            const rotUri = await this.rotate(uriToCrop, width2, height2)
-            this.setState({ uri: rotUri })
+            const { uri: rotUri, base64 } = await this.rotate(uriToCrop, width2, height2)
+            this.setState({ uri: rotUri, base64 })
         })
     }
 
@@ -327,6 +329,7 @@ class ImgManipulator extends Component {
     }
 
     rotate = async (uri, width2, height2) => {
+        const { saveOptions } = this.props
         const manipResult = await ImageManipulator.manipulateAsync(uri, [{
             rotate: -90,
         }, {
@@ -334,24 +337,26 @@ class ImgManipulator extends Component {
                 width: this.trueWidth || width2,
                 height: this.trueHeight || height2,
             },
-        }], {
-            compress: 1,
-        })
+        }], saveOptions)
         return manipResult.uri
     }
 
     crop = async (cropObj, uri) => {
+        const { saveOptions } = this.props
         if (cropObj.height > 0 && cropObj.width > 0) {
             const manipResult = await ImageManipulator.manipulateAsync(
                 uri,
                 [{
                     crop: cropObj,
                 }],
-                { format: 'png' },
+                saveOptions,
             )
-            return manipResult.uri
+            return manipResult
         }
-        return ''
+        return {
+            uri: null,
+            base64: null,
+        }
     };
 
     calculateMaxSizes = (event) => {
@@ -394,6 +399,7 @@ class ImgManipulator extends Component {
         } = this.props
         const {
             uri,
+            base64,
             cropMode,
             processing,
         } = this.state
@@ -425,7 +431,7 @@ class ImgManipulator extends Component {
                                         {allowRotate
                                             && this.renderButtom(btnTexts.rotate, this.onRotateImage, 'rotate-left')}
                                         {this.renderButtom(btnTexts.done, () => {
-                                            onPictureChoosed(uri)
+                                            onPictureChoosed({ uri, base64 })
                                             this.onToggleModal()
                                         }, 'check')}
                                     </View>
@@ -662,7 +668,7 @@ export default ImgManipulator
 
 
 ImgManipulator.defaultProps = {
-    onPictureChoosed: uri => console.log('URI:', uri),
+    onPictureChoosed: ({ uri, base64 }) => console.log('URI:', uri, base64),
     btnTexts: {
         crop: 'Crop',
         rotate: 'Rotate',
@@ -671,12 +677,18 @@ ImgManipulator.defaultProps = {
     },
     dragVelocity: 100,
     resizeVelocity: 50,
+    saveOptions: {
+        compress: 1,
+        format: ImageManipulator.SaveFormat.PNG,
+        base64: false,
+    },
 }
 
 ImgManipulator.propTypes = {
     isVisible: PropTypes.bool.isRequired,
     onPictureChoosed: PropTypes.func,
     btnTexts: PropTypes.object,
+    saveOptions: PropTypes.object,
     photo: PropTypes.object.isRequired,
     onToggleModal: PropTypes.func.isRequired,
     dragVelocity: PropTypes.number,
