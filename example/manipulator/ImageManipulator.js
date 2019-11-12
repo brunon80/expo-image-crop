@@ -337,7 +337,7 @@ class ImgManipulator extends Component {
         }, {
             resize: {
                 width: this.trueWidth || width2,
-                height: this.trueHeight || height2,
+                // height: this.trueHeight || height2,
             },
         }], saveOptions)
         return manipResult
