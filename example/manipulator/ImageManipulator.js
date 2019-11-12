@@ -338,7 +338,7 @@ class ImgManipulator extends Component {
                 height: this.trueHeight || height2,
             },
         }], saveOptions)
-        return manipResult.uri
+        return manipResult
     }
 
     crop = async (cropObj, uri) => {
@@ -411,7 +411,6 @@ class ImgManipulator extends Component {
                 hardwareAccelerated
                 onRequestClose={() => {
                     this.onToggleModal()
-                    console.log('Modal has been closed.')
                 }}
             >
                 <SafeAreaView
