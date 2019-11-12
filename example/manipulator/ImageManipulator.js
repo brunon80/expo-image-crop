@@ -26,25 +26,15 @@ const { width } = Dimensions.get('window')
 class ImgManipulator extends Component {
     constructor(props) {
         super(props)
-        const { photo, squareAspect } = this.props
+        const { squareAspect } = this.props
         this.state = {
             cropMode: false,
             processing: false,
-            uri: photo.uri,
+            // uri: photo.uri,
             squareAspect,
         }
 
         this.scrollOffset = 0
-
-        this.trueSize = {}
-        if (photo.width || photo.height) {
-            if (photo.width) {
-                this.trueSize.width = photo.width
-            }
-            if (photo.height) {
-                this.trueSize.height = photo.height
-            }
-        }
 
         this.currentPos = {
             left: 0,
@@ -82,11 +72,23 @@ class ImgManipulator extends Component {
         })
     }
 
-    get trueWidth() {
-        return this.trueSize && this.trueSize.width ? this.trueSize.width : null
+    async componentDidMount() {
+        await this.onConvertImageToEditableSize()
     }
-    get trueHeight() {
-        return this.trueSize && this.trueSize.height ? this.trueSize.height : null
+
+    async onConvertImageToEditableSize() {
+        const { photo: { uri: rawUri } } = this.props
+        const { uri } = await ImageManipulator.manipulateAsync(rawUri,
+            [
+                {
+                    resize: {
+                        width: 1080,
+                    },
+                },
+            ])
+        this.setState({
+            uri,
+        })
     }
 
     get isRemote() {
@@ -101,7 +103,7 @@ class ImgManipulator extends Component {
     onMove = (evt, gestureState) => {
         const { dragVelocity, resizeVelocity } = this.props
         const { squareAspect } = this.state
-        const corner = this.corner
+        const { corner } = this
         const { vx, vy } = gestureState
         if (!this.isResizing && !corner) {
             const xVel = vx * dragVelocity
