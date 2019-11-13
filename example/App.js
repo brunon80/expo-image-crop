@@ -53,30 +53,25 @@ export default class App extends React.Component {
               <Button title="Get Image from Image Library" onPress={() => this._pickImage()} />
               <View style={{ margin: 20 }} />
               <Button title="Take Picture" onPress={() => this._pickCameraImage()} />
-              {
-                  isVisible
-              && (
-                  <ImageManipulator
-                      photo={{ uri }}
-                      isVisible={isVisible}
-                      onPictureChoosed={({ uri: uriM }) => this.setState({ uri: uriM })}
-                      onToggleModal={this.onToggleModal}
-                      saveOptions={{
-                          compress: 1,
-                          format: 'png',
-                          base64: true,
-                      }}
-                      btnTexts={
-                          {
-                              crop: 'Recortar',
-                              rotate: 'Rotacionar',
-                              done: 'Pronto',
-                              processing: 'Processando',
-                          }
+              <ImageManipulator
+                  photo={{ uri }}
+                  isVisible={isVisible}
+                  onPictureChoosed={({ uri: uriM }) => this.setState({ uri: uriM })}
+                  onToggleModal={this.onToggleModal}
+                  saveOptions={{
+                      compress: 1,
+                      format: 'png',
+                      base64: true,
+                  }}
+                  btnTexts={
+                      {
+                          crop: 'Recortar',
+                          rotate: 'Rotacionar',
+                          done: 'Pronto',
+                          processing: 'Processando',
                       }
-                  />
-              )
-              }
+                  }
+              />
           </ImageBackground>
       )
   }

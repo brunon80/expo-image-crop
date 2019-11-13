@@ -76,6 +76,10 @@ class ImgManipulator extends Component {
         await this.onConvertImageToEditableSize()
     }
 
+    async componentWillReceiveProps() {
+        await this.onConvertImageToEditableSize()
+    }
+
     async onConvertImageToEditableSize() {
         const { photo: { uri: rawUri } } = this.props
         const { uri } = await ImageManipulator.manipulateAsync(rawUri,
