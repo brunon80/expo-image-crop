@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "expo-image-crop",
+    "name": "Kropper",
     "slug": "expo-image-crop",
     "privacy": "public",
     "sdkVersion": "35.0.0",
@@ -10,11 +10,11 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon_crop.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/crop_splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#2683d9"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
