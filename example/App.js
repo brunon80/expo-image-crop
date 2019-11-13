@@ -103,14 +103,6 @@ export default class App extends React.Component {
                             format: 'png',
                             base64: true,
                         }}
-                        btnTexts={
-                            {
-                                crop: 'Recortar',
-                                rotate: 'Rotacionar',
-                                done: 'Pronto',
-                                processing: 'Processando',
-                            }
-                        }
                     />
                 )
                 }
