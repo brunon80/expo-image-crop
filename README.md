@@ -24,7 +24,7 @@
 
 >**Help Needed**: Remove flickering while resizing image, if you know why open a issue or a PR
 
->Updated to Expo SDK 35
+>Updated to Expo SDK 36
 
 >New Crop UI
 
@@ -98,10 +98,25 @@ export default class App extends React.Component {
     * format `string` - ImageManipulator.SaveFormat.{JPEG, PNG}. Specifies what type of compression should be used and what is the result file extension. SaveFormat.PNG compression is lossless but slower, SaveFormat.JPEG is faster but the image has visible artifacts. Defaults to SaveFormat.PNG.
     * base64 `boolea` - Whether to also include the image data in Base64 format.
 
+## Return of onPictureChoosed is an object with format:
+
+```javascript
+{
+    uri: string,
+    base64: string // undefined if base64 is false on saveOptions prop
+}
+```
+## Run the example!
+- Clone this repository
+- cd example/
+- run yarn or npm install
+- enjoy!
+
+
 ## Requirements
 * Use it into Expo app (from expo client, Standalone app or ExpoKit app).
 * Because we need to have access to `Expo.ImageManipulator`
-* Only Expo SDK 35 or Higher
+* Only Expo SDK 33 or Higher
 
 ## Features
 * Crop and rotate image with `Expo.ImageManipulator`

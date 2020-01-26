@@ -96,7 +96,10 @@ export default class App extends React.Component {
                     <ImageManipulator
                         photo={{ uri }}
                         isVisible={isVisible}
-                        onPictureChoosed={({ uri: uriM }) => this.setState({ uri: uriM })}
+                        onPictureChoosed={(data) => {
+                            console.log(data)
+                            this.setState({ uri: data.uri })
+                        }}
                         onToggleModal={this.onToggleModal}
                         saveOptions={{
                             compress: 1,
