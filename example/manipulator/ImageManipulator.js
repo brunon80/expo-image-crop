@@ -100,6 +100,7 @@ class ImgManipulator extends Component {
         this.scrollView.setNativeProps({ scrollEnabled: false })
     }
 
+    // This function is responsible for decide to move or resize crop
     onMove = (evt, gestureState) => {
         const { dragVelocity, resizeVelocity } = this.props
         const { squareAspect } = this.state
