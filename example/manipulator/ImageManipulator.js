@@ -76,10 +76,6 @@ class ImgManipulator extends Component {
         await this.onConvertImageToEditableSize()
     }
 
-    async componentWillReceiveProps() {
-        await this.onConvertImageToEditableSize()
-    }
-
     async onConvertImageToEditableSize() {
         const { photo: { uri: rawUri } } = this.props
         const { uri } = await ImageManipulator.manipulateAsync(rawUri,
@@ -392,6 +388,11 @@ class ImgManipulator extends Component {
     onShouldMove = () => {
         this.isResizing = true
         this.corner = null
+    }
+
+    // eslint-disable-next-line camelcase
+    async UNSAFE_componentWillReceiveProps() {
+        await this.onConvertImageToEditableSize()
     }
 
     render() {
