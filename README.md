@@ -111,6 +111,7 @@ export default class App extends React.Component {
 - cd example/
 - run yarn or npm install
 - enjoy!
+### The animation of crop mask may be a lot slow on development mode, please change to production mode to look and feel as it should be
 
 
 ## Requirements
