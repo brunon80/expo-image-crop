@@ -81,13 +81,13 @@ export default class App extends React.Component {
 |------------------|----------|----------------------------------------------------------------------------|----------------------------------------------------|
 | isVisible        | boolean  | false                                                                      | Show or hide modal with image manipulator UI       |
 | onPictureChoosed | function |                                                                            | Callback where is passed image edited as parameter |
-| photo            | object   | ```javascript {  "uri": string } ```                                       | uri of image to be edited                          |
-| btnTexts         | object   | ```javascript{ "crop": string, "done": string, "processing": string}```    | name for crop, done and processing texts           |
+| photo            | object   | ```{  "uri": string } ```                                       | uri of image to be edited                          |
+| btnTexts         | object   | ```{ "crop": string, "done": string, "processing": string}```    | name for crop, done and processing texts           |
 | onToggleModal    | function |                                                                            | Callback called when modal is dismissed            |
 | borderColor      | string   | #a4a4a4                                                                    | Color for crop mask border                         |
 | allowRotate      | boolean  | true                                                                       | Show rotate option                                 |
 | allowFlip        | boolean  | true                                                                       | Show flip option                                   |
-| saveOptions      | object   | ```javascript{ "compress": number, "format": string, "base64": boolean}``` | A map defining how modified image should be saved  
+| saveOptions      | object   | ```{ "compress": number, "format": string, "base64": boolean}``` | A map defining how modified image should be saved  
 
 
 ## Return of onPictureChoosed is an object with format:
