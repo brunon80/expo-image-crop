@@ -22,14 +22,14 @@
 
 [PRs are welcome...](https://github.com/brunon80/expo-image-crop/pulls)
 
->**Help Needed**: Remove flickering while resizing image, if you know why open a issue or a PR
+>No more flickering while resizing image mask!
 
->Updated to Expo SDK 36
+>Compatible with Expo SDK 36
 
->New Crop UI
+> Atention: *squareAspect* was removed on this version and will be add in future versions, if you need it, please stay at 0.2.17
 
 
-### Install Dependences
+### Expo Dependences
 - yarn add react-native-vector-icons
 - expo install expo-permissions
 - expo install expo-image-picker
@@ -77,26 +77,18 @@ export default class App extends React.Component {
 ```
 
 ## Props
-* isVisible: `Bool` - Show or hide modal with image manipulator UI
-* onPictureChoosed: `function` - Callback where is passed image edited as parameter
-* photo: `object`
-    * uri: `string` - uri of image to be edited
-* btnTexts: `object`
-    * crop: `string` - name for crop text
-    * rotate: `string` - name for rotate text
-    * done: `string` - name for done text
-    * processing: `string` - name for processing text
-* onToggleModal: `function` - Callback called when modal is dismissed
-* borderColor: `string` - Color for crop mask border
-* allowRotate: `boolean` - Show rotate option
-* pinchGestureEnabled: `boolean` - Disable/Enable pinch gesture
-* squareAspect: `boolean` - Disable/Enable the square aspect of crop mask
-* dragVelocity: `number` - Ajustable drag velocity
-* resizeVelocity: `number` - Ajustable resize velocity
-* saveOptions `object` - A map defining how modified image should be saved
-    * compress `number` - A value in range 0.0 - 1.0 specifying compression level of the result image. 1 means no compression (highest quality) and 0 the highest compression (lowest quality).
-    * format `string` - ImageManipulator.SaveFormat.{JPEG, PNG}. Specifies what type of compression should be used and what is the result file extension. SaveFormat.PNG compression is lossless but slower, SaveFormat.JPEG is faster but the image has visible artifacts. Defaults to SaveFormat.PNG.
-    * base64 `boolea` - Whether to also include the image data in Base64 format.
+| Props            | Type     | Default                                                                    | Description                                        |
+|------------------|----------|----------------------------------------------------------------------------|----------------------------------------------------|
+| isVisible        | Boolean  | false                                                                      | Show or hide modal with image manipulator UI       |
+| onPictureChoosed | function |                                                                            | Callback where is passed image edited as parameter |
+| photo            | object   | ```javascript {  "uri": string } ```                                       | uri of image to be edited                          |
+| btnTexts         | object   | ```javascript{ "crop": string, "done": string, "processing": string}```    | name for crop, done and processing texts           |
+| onToggleModal    | function |                                                                            | Callback called when modal is dismissed            |
+| borderColor      | string   | #a4a4a4                                                                    | Color for crop mask border                         |
+| allowRotate      | boolean  | true                                                                       | Show rotate option                                 |
+| allowFlip        | boolean  | true                                                                       | Show flip option                                   |
+| saveOptions      | object   | ```javascript{ "compress": number, "format": string, "base64": boolean}``` | A map defining how modified image should be saved  
+
 
 ## Return of onPictureChoosed is an object with format:
 
@@ -111,23 +103,17 @@ export default class App extends React.Component {
 - cd example/
 - run yarn or npm install
 - enjoy!
-### The animation of crop mask may be a lot slow on development mode, please change to production mode to look and feel as it should be
+### The animation is fluid even on dev mode!
 
 
 ## Requirements
 * Use it into Expo app (from expo client, Standalone app or ExpoKit app).
-* Because we need to have access to `Expo.ImageManipulator`
-* Only Expo SDK 33 or Higher
+* Because we need to have access to `ImageManipulator`
 
 ## Features
-* Crop and rotate image with `Expo.ImageManipulator`
-
-## Kown Issues
-* On some devices always only crops the upper left side of the image, [see here.](https://github.com/brunon80/expo-image-crop/issues/15)
+* Crop
+* Rotate
+* Flip (Horizontal and Vertical)
+* Base64
 
 ## If you have some problem open a issue
-
-## TO DO
-
-- [ ] [Android / IOS] Detect touches with more precision (Drag / Resizing)
-- [x] [Android / IOS] Better crop mask
