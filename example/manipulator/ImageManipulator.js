@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-    PanResponder,
     Dimensions,
     Image,
     ScrollView,
@@ -9,28 +8,34 @@ import {
     Text,
     SafeAreaView,
     TouchableOpacity,
+    YellowBox,
 } from 'react-native'
-import * as Animatable from 'react-native-animatable'
 import * as ImageManipulator from 'expo-image-manipulator'
 import * as FileSystem from 'expo-file-system'
 import PropTypes from 'prop-types'
 import AutoHeightImage from 'react-native-auto-height-image'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-// eslint-enable-next-line import/no-extraneous-dependencies
-
-import HybridTouch from '../HybridTouch'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import { isIphoneX } from 'react-native-iphone-x-helper'
+import ImageCropOverlay from './ImageCropOverlay'
 
 const { width } = Dimensions.get('window')
 
-class ImgManipulator extends Component {
+YellowBox.ignoreWarnings(['componentWillReceiveProps', 'componentWillUpdate', 'componentWillMount'])
+YellowBox.ignoreWarnings([
+    'Warning: componentWillMount is deprecated',
+    'Warning: componentWillReceiveProps is deprecated',
+    'Module RCTImageLoader requires',
+])
+
+class ExpoImageManipulator extends Component {
     constructor(props) {
         super(props)
         const { squareAspect } = this.props
         this.state = {
             cropMode: false,
             processing: false,
-            // uri: photo.uri,
+            zoomScale: 1,
             squareAspect,
         }
 
@@ -51,25 +56,10 @@ class ImgManipulator extends Component {
             height: 0,
         }
 
-        this.isResizing = false
-
-        this._panResponder = PanResponder.create({
-            // Ask to be the responder:
-            onStartShouldSetPanResponder: () => false,
-            onStartShouldSetPanResponderCapture: () => false,
-            onMoveShouldSetPanResponder: () => true,
-            onMoveShouldSetPanResponderCapture: () => true,
-
-            onPanResponderGrant: this.onGrant,
-            onPanResponderMove: this.onMove,
-            onPanResponderTerminationRequest: () => true,
-            onPanResponderRelease: this.onRelease,
-            onPanResponderTerminate: () => {
-                // Another component has become the responder, so this gesture
-                // should be cancelled
-            },
-            onShouldBlockNativeResponder: () => false,
-        })
+        this.actualSize = {
+            width: 0,
+            height: 0,
+        }
     }
 
     async componentDidMount() {
@@ -78,7 +68,7 @@ class ImgManipulator extends Component {
 
     async onConvertImageToEditableSize() {
         const { photo: { uri: rawUri } } = this.props
-        const { uri } = await ImageManipulator.manipulateAsync(rawUri,
+        const { uri, width: w, height } = await ImageManipulator.manipulateAsync(rawUri,
             [
                 {
                     resize: {
@@ -89,158 +79,13 @@ class ImgManipulator extends Component {
         this.setState({
             uri,
         })
+        this.actualSize.width = w
+        this.actualSize.height = height
     }
 
     get isRemote() {
         const { uri } = this.state
         return /^(http|https|ftp)?(?:[:/]*)([a-z0-9.-]*)(?::([0-9]+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/.test(uri)
-    }
-
-    onGrant = () => {
-        this.scrollView.setNativeProps({ scrollEnabled: false })
-    }
-
-    // This function is responsible for decide to move or resize crop
-    onMove = (evt, gestureState) => {
-        const { dragVelocity, resizeVelocity } = this.props
-        const { squareAspect } = this.state
-        const { corner } = this
-        const { vx, vy } = gestureState
-        if (!this.isResizing && !corner) {
-            const xVel = vx * dragVelocity
-            const yVel = vy * dragVelocity
-            this.square.transitionTo(
-                {
-                    left: this.currentPos.left + xVel,
-                    top: this.currentPos.top + yVel,
-                },
-                0,
-            )
-        } else {
-            this.isResizing = true
-            const xVelAbs = Math.abs(vx)
-            const yVelAbs = Math.abs(vy)
-            const vel = (xVelAbs > yVelAbs ? vx : vy) * resizeVelocity
-            const xVel = vx * resizeVelocity
-            const yVel = vy * resizeVelocity
-            // tl - positive move - move top left coordinates and shrink size
-            const upDown = yVelAbs > xVelAbs
-            let xChange; let
-                yChange
-            if (corner === 'tl') {
-                xChange = squareAspect ? -vel : -xVel
-                yChange = squareAspect ? xChange : yVel
-
-                const squareWidth = this.currentSize.width + xChange
-
-                const squareHeight = squareAspect
-                    ? squareWidth
-                    : this.currentSize.height + -yChange
-
-                const topMove = squareAspect
-                    ? upDown
-                        ? vel
-                        : vel
-                    : upDown
-                        ? yChange
-                        : yChange
-
-                const leftMove = squareAspect
-                    ? upDown
-                        ? -vel
-                        : -vel
-                    : upDown
-                        ? xChange
-                        : xChange
-
-                this.square.transitionTo(
-                    {
-                        top: this.currentPos.top + topMove,
-                        left: this.currentPos.left + -leftMove,
-                        width: squareWidth < 100 ? 100 : squareWidth,
-                        height: squareHeight < 100 ? 100 : squareHeight,
-                    },
-                    0,
-                )
-            } else if (corner === 'tr') {
-                xChange = squareAspect ? (upDown ? -vel : vel) : xVel
-                yChange = squareAspect ? xChange : yVel
-
-                const squareWidth = this.currentSize.width + xChange
-
-                const squareHeight = squareAspect
-                    ? squareWidth
-                    : this.currentSize.height + -yChange
-
-                const topMove = squareAspect
-                    ? upDown
-                        ? vel
-                        : -vel
-                    : upDown
-                        ? yChange
-                        : -yChange
-
-                this.square.transitionTo(
-                    {
-                        top: this.currentPos.top + topMove,
-                        width: squareWidth < 100 ? 100 : squareWidth,
-                        height: squareHeight < 100 ? 100 : squareHeight,
-                    },
-                    0,
-                )
-            } else if (corner === 'bl') {
-                xChange = squareAspect ? (upDown ? -vel : vel) : xVel
-                yChange = squareAspect ? xChange : yVel
-
-                const squareWidth = this.currentSize.width + -xChange
-
-                const squareHeight = squareAspect
-                    ? squareWidth
-                    : this.currentSize.height + yChange
-
-                const leftMove = squareAspect
-                    ? upDown
-                        ? -vel
-                        : vel
-                    : upDown
-                        ? -xChange
-                        : xChange
-
-                this.square.transitionTo(
-                    {
-                        left: this.currentPos.left + leftMove,
-                        width: squareWidth < 100 ? 100 : squareWidth,
-                        height: squareHeight < 100 ? 100 : squareHeight,
-                    },
-                    0,
-                )
-            } else if (corner === 'br') {
-                xChange = squareAspect ? vel : xVel
-                yChange = squareAspect ? xChange : yVel
-
-                const squareWidth = this.currentSize.width + xChange
-
-                const squareHeight = squareAspect
-                    ? squareWidth
-                    : this.currentSize.height + yChange
-
-                this.square.transitionTo(
-                    {
-                        width: squareWidth < 100 ? 100 : squareWidth,
-                        height: squareHeight < 100 ? 100 : squareHeight,
-                    },
-                    0,
-                )
-            }
-            // tl - negative move - move top left coordinates and increase size
-            // tr - move top right coordinates and shrink size
-        }
-    }
-
-    onRelease = () => {
-        this.scrollView.setNativeProps({ scrollEnabled: true })
-        this.isResizing = false
-        this.corner = null
     }
 
     onToggleModal = () => {
@@ -251,13 +96,9 @@ class ImgManipulator extends Component {
 
     onCropImage = () => {
         this.setState({ processing: true })
-        let imgWidth
-        let imgHeight
         const { uri } = this.state
-        Image.getSize(uri, async (width2, height2) => {
-            let cropObj;
-            ({ cropObj, imgWidth, imgHeight } = this.getCropBounds(imgWidth, width2, imgHeight, height2))
-
+        Image.getSize(uri, async (actualWidth, actualHeight) => {
+            const cropObj = this.getCropBounds(actualWidth, actualHeight)
             if (cropObj.height > 0 && cropObj.width > 0) {
                 let uriToCrop = uri
                 if (this.isRemote) {
@@ -267,10 +108,18 @@ class ImgManipulator extends Component {
                     )
                     uriToCrop = response.uri
                 }
-                const { uri: uriCroped, base64 } = await this.crop(cropObj, uriToCrop)
+                const {
+                    uri: uriCroped, base64, width: croppedWidth, height: croppedHeight,
+                } = await this.crop(cropObj, uriToCrop)
+
+                this.actualSize.width = croppedWidth
+                this.actualSize.height = croppedHeight
+
                 this.setState({
                     uri: uriCroped, base64, cropMode: false, processing: false,
                 })
+            } else {
+                this.setState({ cropMode: false, processing: false })
             }
         })
     }
@@ -291,47 +140,85 @@ class ImgManipulator extends Component {
         })
     }
 
+    onFlipImage = async (orientation) => {
+        const { uri } = this.state
+        let uriToCrop = uri
+        if (this.isRemote) {
+            const response = await FileSystem.downloadAsync(
+                uri,
+                FileSystem.documentDirectory + 'image',
+            )
+            uriToCrop = response.uri
+        }
+        Image.getSize(uri, async () => {
+            const { uri: rotUri, base64 } = await this.filp(uriToCrop, orientation)
+            this.setState({ uri: rotUri, base64 })
+        })
+    }
+
     onHandleScroll = (event) => {
         this.scrollOffset = event.nativeEvent.contentOffset.y
     }
 
-    getCropBounds = (imgWidth, width2, imgHeight, height2) => {
-        imgWidth = this.trueWidth || width2
-        imgHeight = this.trueHeight || height2
-        const heightRatio = this.currentSize.height / this.maxSizes.height
-        const offsetHeightRatio = this.currentPos.top / this.maxSizes.height
-        const isOutOfBoundsY = imgHeight < (imgHeight * heightRatio) + imgHeight * offsetHeightRatio
-        const offsetMaxHeight = (imgHeight * heightRatio + imgHeight * offsetHeightRatio) - imgHeight
-        const isOutOfBoundsX = imgWidth < (this.currentPos.left * imgWidth / width) + (this.currentSize.width * imgWidth / width)
-        const offsetMaxWidth = (this.currentPos.left * imgWidth / width) + (this.currentSize.width * imgWidth / width) - imgWidth
-        const isOutOfBoundsLeft = (this.currentPos.left * imgWidth / width) < 0
-        const isOutOfBoundsTop = (imgHeight * offsetHeightRatio) < 0
-        const originX = isOutOfBoundsLeft ? 0 : this.currentPos.left * imgWidth / width
-        const originY = isOutOfBoundsTop ? 0 : imgHeight * offsetHeightRatio
-        let cropWidth = this.currentSize.width * imgWidth / width
-        let cropHeight = imgHeight * heightRatio
-        if (isOutOfBoundsX) {
-            cropWidth -= offsetMaxWidth
+    getCropBounds = (actualWidth, actualHeight) => {
+        const imageRatio = actualHeight / actualWidth
+        let originalHeight = Dimensions.get('window').height - 64
+        if (isIphoneX()) {
+            originalHeight = Dimensions.get('window').height - 122
         }
-        if (isOutOfBoundsY) {
-            cropHeight -= offsetMaxHeight
+        const renderedImageWidth = imageRatio < (originalHeight / width) ? width : originalHeight / imageRatio
+        const renderedImageHeight = imageRatio < (originalHeight / width) ? width * imageRatio : originalHeight
+
+        const renderedImageY = (originalHeight - renderedImageHeight) / 2.0
+        const renderedImageX = (width - renderedImageWidth) / 2.0
+
+        const renderImageObj = {
+            left: renderedImageX,
+            top: renderedImageY,
+            width: renderedImageWidth,
+            height: renderedImageHeight,
         }
-        if (isOutOfBoundsLeft) {
-            cropWidth += this.currentPos.left * imgWidth / width
+        const cropOverlayObj = {
+            left: this.currentPos.left,
+            top: this.currentPos.top,
+            width: this.currentSize.width,
+            height: this.currentSize.height,
         }
-        if (isOutOfBoundsTop) {
-            cropHeight += imgHeight * offsetHeightRatio
+
+        let intersectAreaObj = {}
+
+        const x = Math.max(renderImageObj.left, cropOverlayObj.left)
+        const num1 = Math.min(renderImageObj.left + renderImageObj.width, cropOverlayObj.left + cropOverlayObj.width)
+        const y = Math.max(renderImageObj.top, cropOverlayObj.top)
+        const num2 = Math.min(renderImageObj.top + renderImageObj.height, cropOverlayObj.top + cropOverlayObj.height)
+        if (num1 >= x && num2 >= y) {
+            intersectAreaObj = {
+                originX: (x - renderedImageX) * (actualWidth / renderedImageWidth),
+                originY: (y - renderedImageY) * (actualWidth / renderedImageWidth),
+                width: (num1 - x) * (actualWidth / renderedImageWidth),
+                height: (num2 - y) * (actualWidth / renderedImageWidth),
+            }
+        } else {
+            intersectAreaObj = {
+                originX: x - renderedImageX,
+                originY: y - renderedImageY,
+                width: 0,
+                height: 0,
+            }
         }
-        const cropObj = {
-            originX,
-            originY,
-            width: cropWidth,
-            height: cropHeight,
-        }
-        return { cropObj, imgWidth, imgHeight }
+        return intersectAreaObj
     }
 
-    rotate = async (uri, width2, height2) => {
+    filp = async (uri, orientation) => {
+        const { saveOptions } = this.props
+        const manipResult = await ImageManipulator.manipulateAsync(uri, [{
+            flip: orientation === 'vertical' ? ImageManipulator.FlipType.Vertical : ImageManipulator.FlipType.Horizontal,
+        }],
+        saveOptions)
+        return manipResult
+    };
+
+    rotate = async (uri, width2) => {
         const { saveOptions } = this.props
         const manipResult = await ImageManipulator.manipulateAsync(uri, [{
             rotate: -90,
@@ -363,9 +250,10 @@ class ImgManipulator extends Component {
     };
 
     calculateMaxSizes = (event) => {
+        const { squareAspect } = this.state
         let w1 = event.nativeEvent.layout.width || 100
         let h1 = event.nativeEvent.layout.height || 100
-        if (this.state.squareAspect) {
+        if (squareAspect) {
             if (w1 < h1) h1 = w1
             else w1 = h1
         }
@@ -373,37 +261,28 @@ class ImgManipulator extends Component {
         this.maxSizes.height = h1
     };
 
-    renderButtom = (title, action, icon) => (
-        <HybridTouch onPress={action}>
-            <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center' }}>
-                <Icon size={20} name={icon} color="white" />
-                <Text style={{ color: 'white', fontSize: 15, marginLeft: 5 }}>{title}</Text>
-            </View>
-        </HybridTouch>
-    )
-
-    setCorner = (corner) => {
-        this.corner = corner
-    };
-
-    onShouldMove = () => {
-        this.isResizing = true
-        this.corner = null
-    }
-
     // eslint-disable-next-line camelcase
     async UNSAFE_componentWillReceiveProps() {
         await this.onConvertImageToEditableSize()
+    }
+
+    zoomImage() {
+        // this.refs.imageScrollView.zoomScale = 5
+        // this.setState({width: width})
+        // this.setState({zoomScale: 5})
+
+        // this.setState(curHeight)
     }
 
     render() {
         const {
             isVisible,
             onPictureChoosed,
-            borderColor = '#a4a4a4',
+            borderColor,
             allowRotate = true,
-            pinchGestureEnabled,
+            allowFlip = true,
             btnTexts,
+            squareAspect,
         } = this.props
         const {
             uri,
@@ -411,10 +290,33 @@ class ImgManipulator extends Component {
             cropMode,
             processing,
         } = this.state
+
+        const imageRatio = this.actualSize.height / this.actualSize.width
+        let originalHeight = Dimensions.get('window').height - 64
+        if (isIphoneX()) {
+            originalHeight = Dimensions.get('window').height - 122
+        }
+
+        const cropRatio = originalHeight / width
+
+        const cropWidth = imageRatio < cropRatio ? width : originalHeight / imageRatio
+        const cropHeight = imageRatio < cropRatio ? width * imageRatio : originalHeight
+
+        const cropInitialTop = (originalHeight - cropHeight) / 2.0
+        const cropInitialLeft = (width - cropWidth) / 2.0
+
+
+        if (this.currentSize.width === 0 && cropMode) {
+            this.currentSize.width = cropWidth
+            this.currentSize.height = cropHeight
+
+            this.currentPos.top = cropInitialTop
+            this.currentPos.left = cropInitialLeft
+        }
         return (
             <Modal
                 animationType="slide"
-                transparent={false}
+                transparent
                 visible={isVisible}
                 hardwareAccelerated
                 onRequestClose={() => {
@@ -423,245 +325,146 @@ class ImgManipulator extends Component {
             >
                 <SafeAreaView
                     style={{
-                        width, backgroundColor: 'black', flexDirection: 'row', justifyContent: 'space-between',
+                        width, flexDirection: 'row', backgroundColor: 'black', justifyContent: 'space-between',
                     }}
                 >
-                    <ScrollView horizontal>
-                        {this.renderButtom('', this.onToggleModal, 'arrow-left')}
-                        {
-                            !cropMode
-                                ? (
-                                    <View style={{ flexDirection: 'row' }}>
-                                        {this.renderButtom(btnTexts.crop, () => {
-                                            this.setState({ cropMode: true })
-                                        }, 'crop')}
-                                        {allowRotate
-                                            && this.renderButtom(btnTexts.rotate, this.onRotateImage, 'rotate-left')}
-                                        {this.renderButtom(btnTexts.done, () => {
-                                            onPictureChoosed({ uri, base64 })
-                                            this.onToggleModal()
-                                        }, 'check')}
+                    <ScrollView scrollEnabled={false}
+                        horizontal
+                        contentContainerStyle={{
+                            width: '100%', paddingHorizontal: 15, height: 44, alignItems: 'center',
+                        }}
+                    >
+                        {!cropMode
+                            ? (
+                                <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity onPress={() => this.onToggleModal()}
+                                        style={{
+                                            width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
+                                        }}
+                                    >
+                                        <Icon size={24} name="arrow-left" color="white" />
+                                    </TouchableOpacity>
+                                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                        <TouchableOpacity onPress={() => this.setState({ cropMode: true })}
+                                            style={{
+                                                marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
+                                            }}
+                                        >
+                                            <Icon size={20} name="crop" color="white" />
+                                        </TouchableOpacity>
+                                        {
+                                            allowRotate
+                                            && (
+                                                <View style={{ flexDirection: 'row' }}>
+
+                                                    <TouchableOpacity onPress={() => this.onRotateImage()}
+                                                        style={{
+                                                            marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
+                                                        }}
+                                                    >
+                                                        <Icon size={20} name="rotate-left" color="white" />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => this.onFlipImage('vertical')}
+                                                        style={{
+                                                            marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
+                                                        }}
+                                                    >
+                                                        <MaterialIcon style={{ transform: [{ rotate: '270deg' }] }} size={20} name="flip" color="white" />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        }
+                                        {
+                                            allowFlip
+                                            && (
+                                                <View style={{ flexDirection: 'row' }}>
+
+                                                    <TouchableOpacity onPress={() => this.onFlipImage('horizontal')}
+                                                        style={{
+                                                            marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
+                                                        }}
+                                                    >
+                                                        <MaterialIcon size={20} name="flip" color="white" />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => { onPictureChoosed({ uri, base64 }); this.onToggleModal() }}
+                                                        style={{
+                                                            marginLeft: 10, width: 60, height: 32, alignItems: 'center', justifyContent: 'center',
+                                                        }}
+                                                    >
+                                                        <Text style={{ fontWeight: '500', color: 'white', fontSize: 18 }}>{btnTexts.done}</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        }
                                     </View>
-                                )
-                                : this.renderButtom(
-                                    processing ? btnTexts.processing : btnTexts.done,
-                                    this.onCropImage,
-                                    processing ? 'progress-check' : 'check',
-                                )
+                                </View>
+                            )
+                            : (
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <TouchableOpacity onPress={() => this.setState({ cropMode: false })}
+                                        style={{
+                                            width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
+                                        }}
+                                    >
+                                        <Icon size={24} name="arrow-left" color="white" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.onCropImage()}
+                                        style={{
+                                            marginRight: 10, alignItems: 'flex-end', flex: 1,
+                                        }}
+                                    >
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <MaterialIcon style={{ flexDirection: 'row', marginRight: 10 }} size={24} name={!processing ? 'done' : 'access-time'} color="white" />
+                                            <Text style={{ fontWeight: '500', color: 'white', fontSize: 18 }}>{!processing ? btnTexts.done : btnTexts.processing}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            )
                         }
                     </ScrollView>
                 </SafeAreaView>
-                <View style={{ flex: 1, backgroundColor: 'black' }}>
+                <View style={{ flex: 1, backgroundColor: 'black', width: Dimensions.get('window').width }}>
                     <ScrollView
                         style={{ position: 'relative', flex: 1 }}
-                        maximumZoomScale={3}
+                        contentContainerStyle={{ backgroundColor: 'black' }}
+                        maximumZoomScale={5}
                         minimumZoomScale={0.5}
                         onScroll={this.onHandleScroll}
                         bounces={false}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
                         ref={(c) => { this.scrollView = c }}
                         scrollEventThrottle={16}
-                        pinchGestureEnabled={pinchGestureEnabled}
+                        scrollEnabled={false}
+                        pinchGestureEnabled={false}
+                        // scrollEnabled={cropMode ? false : true}
+                        // pinchGestureEnabled={cropMode ? false : pinchGestureEnabled}
                     >
                         <AutoHeightImage
                             style={{ backgroundColor: 'black' }}
                             source={{ uri }}
-                            resizeMode="contain"
+                            resizeMode={imageRatio >= 1 ? 'contain' : 'contain'}
                             width={width}
-                            onLayout={this.calculateMaxSizes}
+                            height={originalHeight}
+                            // onLayout={this.calculateMaxSizes}
                         />
                         {!!cropMode && (
-                            <Animatable.View
-                                onLayout={(event) => {
-                                    this.currentSize.height = event.nativeEvent.layout.height
-                                    this.currentSize.width = event.nativeEvent.layout.width
-                                    this.currentPos.top = event.nativeEvent.layout.y
-                                    this.currentPos.left = event.nativeEvent.layout.x
-                                    this.leftBarrier = this.currentPos.left + this.currentSize.width * 0.8
-                                    this.rightBarrier = this.currentSize.width * 0.2
-                                    this.topBarrier = this.currentSize.height * 0.2 + 45
-                                    this.bottomBarrier = this.currentPos.top + this.currentSize.height * 0.8
+                            <ImageCropOverlay
+                                onLayoutChanged={(top, left, w, height) => {
+                                    this.currentSize.width = w
+                                    this.currentSize.height = height
+                                    this.currentPos.top = top
+                                    this.currentPos.left = left
                                 }}
-                                ref={(ref) => {
-                                    this.square = ref
-                                }}
-                                {...this._panResponder.panHandlers}
-                                style={{
-                                    borderStyle: 'solid',
-                                    borderWidth: 2,
-                                    borderColor,
-                                    flex: 1,
-                                    minHeight: 100,
-                                    width: this.maxSizes.width,
-                                    height: this.maxSizes.height,
-                                    position: 'absolute',
-                                    maxHeight: this.maxSizes.height,
-                                    maxWidth: this.maxSizes.width,
-                                    backgroundColor: 'rgba(0,0,0,0.5)',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'stretch',
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        flex: 3,
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 3,
-                                            borderRightWidth: 1,
-                                            borderBottomWidth: 1,
-                                            borderColor: '#c9c9c9',
-                                            borderStyle: 'solid',
-                                        }}
-                                        onPressIn={() => this.setCorner('tl')}
-                                    >
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                left: 5,
-                                                top: 5,
-                                                borderLeftWidth: 2,
-                                                borderTopWidth: 2,
-                                                height: 48,
-                                                width: 48,
-                                                borderColor: '#f4f4f4',
-                                                borderStyle: 'solid',
-                                            }}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 3,
-                                            borderRightWidth: 1,
-                                            borderBottomWidth: 1,
-                                            borderColor: '#c9c9c9',
-                                            borderStyle: 'solid',
-                                        }}
-                                        onPress={this.onShouldMove}
-                                    />
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 3,
-                                            borderBottomWidth: 1,
-                                            borderColor: '#c9c9c9',
-                                            borderStyle: 'solid',
-                                        }}
-                                        onPressIn={() => this.setCorner('tr')}
-                                    >
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                right: 5,
-                                                top: 5,
-                                                borderRightWidth: 2,
-                                                borderTopWidth: 2,
-                                                height: 48,
-                                                width: 48,
-                                                borderColor: '#f4f4f4',
-                                                borderStyle: 'solid',
-                                            }}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                                <View
-                                    style={{
-                                        flex: 3,
-                                        flexDirection: 'row',
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 3,
-                                            borderBottomWidth: 1,
-                                            borderRightWidth: 1,
-                                            borderColor: '#c9c9c9',
-                                            borderStyle: 'solid',
-                                        }}
-                                        onPress={this.onShouldMove}
-                                    />
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 3,
-                                            borderBottomWidth: 1,
-                                            borderRightWidth: 1,
-                                            borderColor: '#c9c9c9',
-                                            borderStyle: 'solid',
-                                        }}
-                                        onPress={this.onShouldMove}
-                                    />
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 3,
-                                            borderBottomWidth: 1,
-                                            borderColor: '#c9c9c9',
-                                            borderStyle: 'solid',
-                                        }}
-                                        onPress={this.onShouldMove}
-                                    />
-                                </View>
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        flex: 3,
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 3,
-                                            borderRightWidth: 1,
-                                            borderColor: '#c9c9c9',
-                                            borderStyle: 'solid',
-                                            position: 'relative',
-                                        }}
-                                        onPressIn={() => this.setCorner('bl')}
-                                    >
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                left: 5,
-                                                bottom: 5,
-                                                borderLeftWidth: 2,
-                                                borderBottomWidth: 2,
-                                                height: 48,
-                                                width: 48,
-                                                borderColor: '#f4f4f4',
-                                                borderStyle: 'solid',
-                                            }}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={{
-                                            flex: 3,
-                                            borderRightWidth: 1,
-                                            borderColor: '#c9c9c9',
-                                            borderStyle: 'solid',
-                                        }}
-                                        onPress={this.onShouldMove}
-                                    />
-                                    <TouchableOpacity
-                                        style={{ flex: 3, position: 'relative' }}
-                                        onPressIn={() => this.setCorner('br')}
-                                    >
-                                        <View
-                                            style={{
-                                                position: 'absolute',
-                                                right: 5,
-                                                bottom: 5,
-                                                borderRightWidth: 2,
-                                                borderBottomWidth: 2,
-                                                height: 48,
-                                                width: 48,
-                                                borderColor: '#f4f4f4',
-                                                borderStyle: 'solid',
-                                            }}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                            </Animatable.View>
+                                initialWidth={cropWidth}
+                                initialHeight={cropHeight}
+                                initialTop={cropInitialTop}
+                                initialLeft={cropInitialLeft}
+                                minHeight={100}
+                                minWidth={100}
+                                borderColor={borderColor}
+                                squareAspect
+                            />
                         )
                         }
                     </ScrollView>
@@ -671,19 +474,17 @@ class ImgManipulator extends Component {
     }
 }
 
-export default ImgManipulator
+export default ExpoImageManipulator
 
-
-ImgManipulator.defaultProps = {
+ExpoImageManipulator.defaultProps = {
     onPictureChoosed: ({ uri, base64 }) => console.log('URI:', uri, base64),
+    borderColor: '#a4a4a4',
     btnTexts: {
         crop: 'Crop',
         rotate: 'Rotate',
         done: 'Done',
         processing: 'Processing',
     },
-    dragVelocity: 100,
-    resizeVelocity: 50,
     saveOptions: {
         compress: 1,
         format: ImageManipulator.SaveFormat.PNG,
@@ -691,13 +492,12 @@ ImgManipulator.defaultProps = {
     },
 }
 
-ImgManipulator.propTypes = {
+ExpoImageManipulator.propTypes = {
+    borderColor: PropTypes.string,
     isVisible: PropTypes.bool.isRequired,
     onPictureChoosed: PropTypes.func,
     btnTexts: PropTypes.object,
     saveOptions: PropTypes.object,
     photo: PropTypes.object.isRequired,
     onToggleModal: PropTypes.func.isRequired,
-    dragVelocity: PropTypes.number,
-    resizeVelocity: PropTypes.number,
 }

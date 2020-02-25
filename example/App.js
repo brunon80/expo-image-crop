@@ -100,11 +100,17 @@ export default class App extends React.Component {
                             console.log(data)
                             this.setState({ uri: data.uri })
                         }}
+                        squareAspect
                         onToggleModal={this.onToggleModal}
                         saveOptions={{
                             compress: 1,
                             format: 'png',
                             base64: true,
+                        }}
+                        btnTexts={{
+                            done: 'Ok',
+                            crop: 'Cortar',
+                            processing: 'Processando',
                         }}
                     />
                 )
