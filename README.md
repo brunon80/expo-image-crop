@@ -79,7 +79,7 @@ export default class App extends React.Component {
 ## Props
 | Props            | Type     | Default                                                                    | Description                                        |
 |------------------|----------|----------------------------------------------------------------------------|----------------------------------------------------|
-| isVisible        | Boolean  | false                                                                      | Show or hide modal with image manipulator UI       |
+| isVisible        | boolean  | false                                                                      | Show or hide modal with image manipulator UI       |
 | onPictureChoosed | function |                                                                            | Callback where is passed image edited as parameter |
 | photo            | object   | ```javascript {  "uri": string } ```                                       | uri of image to be edited                          |
 | btnTexts         | object   | ```javascript{ "crop": string, "done": string, "processing": string}```    | name for crop, done and processing texts           |
