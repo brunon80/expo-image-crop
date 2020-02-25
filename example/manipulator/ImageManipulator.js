@@ -415,7 +415,7 @@ class ExpoImageManipulator extends Component {
                                     >
                                         <View style={{ flexDirection: 'row' }}>
                                             <MaterialIcon style={{ flexDirection: 'row', marginRight: 10 }} size={24} name={!processing ? 'done' : 'access-time'} color="white" />
-                                            <Text style={{ fontWeight: '500', color: 'white', fontSize: 18 }}>{!processing ? btnTexts.done : btnTexts.processing}</Text>
+                                            <Text style={{ fontWeight: '500', color: 'white', fontSize: 18 }}>{!processing ? btnTexts.crop : btnTexts.processing}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>
