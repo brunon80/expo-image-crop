@@ -68,19 +68,22 @@ class ExpoImageManipulator extends Component {
 
     async onConvertImageToEditableSize() {
         const { photo: { uri: rawUri } } = this.props
-        const { uri, width: w, height } = await ImageManipulator.manipulateAsync(rawUri,
-            [
-                {
-                    resize: {
-                        width: 1080,
+        Image.getSize(rawUri, async (imgW, imgH) => {
+            const { uri, width: w, height } = await ImageManipulator.manipulateAsync(rawUri,
+                [
+                    {
+                        resize: {
+                            width: imgW,
+                            height: imgH,
+                        },
                     },
-                },
-            ])
-        this.setState({
-            uri,
+                ])
+            this.setState({
+                uri,
+            })
+            this.actualSize.width = w
+            this.actualSize.height = height
         })
-        this.actualSize.width = w
-        this.actualSize.height = height
     }
 
     get isRemote() {
