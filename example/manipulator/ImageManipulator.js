@@ -66,52 +66,14 @@ class ExpoImageManipulator extends Component {
         await this.onConvertImageToEditableSize()
     }
 
-    // TO-DO Need refactor
     onGetCorrectSizes = (w, h) => {
         const sizes = {
             convertedWidth: w,
             convertedheight: h,
         }
-        const isLandscape = w > h
-        if (sizes.convertedWidth > 1920 && sizes.convertedheight > 1080) {
-            if (sizes.convertedWidth > 1920 || sizes.convertedheight > 1080) {
-                for (let index = 0; index < 2; index += 1) {
-                    if (sizes.convertedWidth > 1080 || sizes.convertedWidth > 1920) {
-                        if (isLandscape) {
-                            sizes.convertedWidth = Math.round(sizes.convertedWidth * 16 / 9)
-                        } else {
-                            sizes.convertedWidth = Math.round(sizes.convertedWidth * 9 / 16)
-                        }
-                    }
-
-                    if (sizes.convertedheight > 1080 || sizes.convertedheight > 1920) {
-                        if (isLandscape) {
-                            sizes.convertedheight = Math.round(sizes.convertedheight * 16 / 9)
-                        } else {
-                            sizes.convertedheight = Math.round(sizes.convertedheight * 9 / 16)
-                        }
-                    }
-                }
-            } else if (sizes.convertedWidth > 1080 && sizes.convertedheight > 1920) {
-                for (let index = 0; index < 2; index += 1) {
-                    if (sizes.convertedWidth > 1080 || sizes.convertedWidth > 1920) {
-                        if (isLandscape) {
-                            sizes.convertedWidth = Math.round(sizes.convertedWidth * 16 / 9)
-                        } else {
-                            sizes.convertedWidth = Math.round(sizes.convertedWidth * 9 / 16)
-                        }
-                    }
-
-                    if (sizes.convertedheight > 1080 || sizes.convertedheight > 1920) {
-                        if (isLandscape) {
-                            sizes.convertedheight = Math.round(sizes.convertedheight * 16 / 9)
-                        } else {
-                            sizes.convertedheight = Math.round(sizes.convertedheight * 9 / 16)
-                        }
-                    }
-                }
-            }
-        }
+        const ratio = Math.min(1920 / w, 1080 / h)
+        sizes.convertedWidth = Math.round(w * ratio)
+        sizes.convertedheight = Math.round(h * ratio)
         return sizes
     }
 
