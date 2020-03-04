@@ -97,10 +97,10 @@ export default class App extends React.Component {
                         photo={{ uri }}
                         isVisible={isVisible}
                         onPictureChoosed={(data) => {
-                            console.log(data)
+                            // console.log(data)
                             this.setState({ uri: data.uri })
                         }}
-                        squareAspect
+                        // fixedMask={{ width: 200, height: 200 }}
                         onToggleModal={this.onToggleModal}
                         saveOptions={{
                             compress: 1,

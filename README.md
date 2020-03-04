@@ -88,6 +88,7 @@ export default class App extends React.Component {
 | allowRotate      | boolean  | true                                                                       | Show rotate option                                 |
 | allowFlip        | boolean  | true                                                                       | Show flip option                                   |
 | saveOptions      | object   | ```{ "compress": number, "format": string, "base64": boolean}``` | A map defining how modified image should be saved  
+| fixedMask      | object   | ```{ "width": number, "height": number }``` | Width and height fixed mask
 
 
 ## Return of onPictureChoosed is an object with format:

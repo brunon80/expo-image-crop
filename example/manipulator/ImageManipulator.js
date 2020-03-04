@@ -31,12 +31,10 @@ YellowBox.ignoreWarnings([
 class ExpoImageManipulator extends Component {
     constructor(props) {
         super(props)
-        const { squareAspect } = this.props
         this.state = {
             cropMode: false,
             processing: false,
             zoomScale: 1,
-            squareAspect,
         }
 
         this.scrollOffset = 0
@@ -264,17 +262,17 @@ class ExpoImageManipulator extends Component {
         }
     };
 
-    calculateMaxSizes = (event) => {
-        const { squareAspect } = this.state
-        let w1 = event.nativeEvent.layout.width || 100
-        let h1 = event.nativeEvent.layout.height || 100
-        if (squareAspect) {
-            if (w1 < h1) h1 = w1
-            else w1 = h1
-        }
-        this.maxSizes.width = w1
-        this.maxSizes.height = h1
-    };
+    // calculateMaxSizes = (event) => {
+    //     const { fixedSquareAspect } = this.state
+    //     let w1 = event.nativeEvent.layout.width || 100
+    //     let h1 = event.nativeEvent.layout.height || 100
+    //     if (fixedSquareAspect) {
+    //         if (w1 < h1) h1 = w1
+    //         else w1 = h1
+    //     }
+    //     this.maxSizes.width = w1
+    //     this.maxSizes.height = h1
+    // };
 
     // eslint-disable-next-line camelcase
     async UNSAFE_componentWillReceiveProps() {
@@ -297,7 +295,7 @@ class ExpoImageManipulator extends Component {
             allowRotate = true,
             allowFlip = true,
             btnTexts,
-            squareAspect,
+            fixedMask,
         } = this.props
         const {
             uri,
@@ -471,14 +469,13 @@ class ExpoImageManipulator extends Component {
                                     this.currentPos.top = top
                                     this.currentPos.left = left
                                 }}
-                                initialWidth={cropWidth}
-                                initialHeight={cropHeight}
+                                initialWidth={(fixedMask && fixedMask.width) || cropWidth}
+                                initialHeight={(fixedMask && fixedMask.height) || cropHeight}
                                 initialTop={cropInitialTop}
                                 initialLeft={cropInitialLeft}
-                                minHeight={100}
-                                minWidth={100}
+                                minHeight={(fixedMask && fixedMask.height) || 100}
+                                minWidth={(fixedMask && fixedMask.width) || 100}
                                 borderColor={borderColor}
-                                squareAspect
                             />
                         )
                         }
@@ -505,6 +502,7 @@ ExpoImageManipulator.defaultProps = {
         format: ImageManipulator.SaveFormat.PNG,
         base64: false,
     },
+    fixedMask: null,
 }
 
 ExpoImageManipulator.propTypes = {
@@ -512,6 +510,7 @@ ExpoImageManipulator.propTypes = {
     isVisible: PropTypes.bool.isRequired,
     onPictureChoosed: PropTypes.func,
     btnTexts: PropTypes.object,
+    fixedMask: PropTypes.object,
     saveOptions: PropTypes.object,
     photo: PropTypes.object.isRequired,
     onToggleModal: PropTypes.func.isRequired,
