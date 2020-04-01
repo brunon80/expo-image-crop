@@ -16,6 +16,7 @@ class ImageCropOverlay extends React.Component {
         initialLeft: this.props.initialLeft,
         initialWidth: this.props.initialWidth,
         initialHeight: this.props.initialHeight,
+        ratio: this.props.ratio,
 
         offsetTop: 0,
         offsetLeft: 0,
@@ -35,7 +36,7 @@ class ImageCropOverlay extends React.Component {
 
     render() {
         const {
-            draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR, initialTop, initialLeft, initialHeight, initialWidth, offsetTop, offsetLeft,
+            draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR, initialTop, initialLeft, initialHeight, initialWidth, offsetTop, offsetLeft, ratio,
         } = this.state
         const style = {}
 
@@ -43,6 +44,16 @@ class ImageCropOverlay extends React.Component {
         style.left = initialLeft + ((draggingTL || draggingML || draggingBL || draggingMM) ? offsetLeft : 0)
         style.width = initialWidth + ((draggingTL || draggingML || draggingBL) ? -offsetLeft : (draggingTM || draggingMM || draggingBM) ? 0 : offsetLeft)
         style.height = initialHeight + ((draggingTL || draggingTM || draggingTR) ? -offsetTop : (draggingML || draggingMM || draggingMR) ? 0 : offsetTop)
+
+        //If ratio specified, modify width and height to maintain ratio
+        if ( ratio && ratio.height && ratio.width) {
+            if (style.width * ratio.width > style.height * ratio.height) {
+                style.height = style.width * (ratio.height / ratio.width)
+            }
+            if (style.height * ratio.height > style.width * ratio.width) {
+                style.width = style.height * (ratio.width / ratio.height)
+            }
+        }
 
         if (style.width > this.props.initialWidth) {
             style.width = this.props.initialWidth

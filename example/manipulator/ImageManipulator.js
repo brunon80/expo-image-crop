@@ -296,6 +296,7 @@ class ExpoImageManipulator extends Component {
             allowFlip = true,
             btnTexts,
             fixedMask,
+            ratio,
         } = this.props
         const {
             uri,
@@ -476,6 +477,7 @@ class ExpoImageManipulator extends Component {
                                 minHeight={(fixedMask && fixedMask.height) || 100}
                                 minWidth={(fixedMask && fixedMask.width) || 100}
                                 borderColor={borderColor}
+                                ratio={ratio || {ratio: {height: 1, width: 1 }}}
                             />
                         )
                         }
@@ -514,4 +516,5 @@ ExpoImageManipulator.propTypes = {
     saveOptions: PropTypes.object,
     photo: PropTypes.object.isRequired,
     onToggleModal: PropTypes.func.isRequired,
+    ratio: PropTypes.object,
 }
