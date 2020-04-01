@@ -286,6 +286,15 @@ class ImageCropOverlay extends React.Component {
         state.initialWidth = initialWidth + ((draggingTL || draggingML || draggingBL) ? -gestureState.dx : (draggingTM || draggingMM || draggingBM) ? 0 : gestureState.dx)
         state.initialHeight = initialHeight + ((draggingTL || draggingTM || draggingTR) ? -gestureState.dy : (draggingML || draggingMM || draggingMR) ? 0 : gestureState.dy)
 
+        if ( ratio && ratio.height && ratio.width) {
+            if (state.initialWidth * ratio.width > state.initialHeight * ratio.height) {
+                state.initialHeight = state.initialWidth * (ratio.height / ratio.width)
+            }
+            if (state.initialHeight * ratio.height > state.initialWidth * ratio.width) {
+                state.initialWidth = state.initialHeight * (ratio.width / ratio.height)
+            }
+        }
+
         if (state.initialWidth > this.props.initialWidth) {
             state.initialWidth = this.props.initialWidth
         }
