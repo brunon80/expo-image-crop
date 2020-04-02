@@ -264,7 +264,7 @@ class ImageCropOverlay extends React.Component {
     // When the touch/mouse is lifted
     handlePanResponderEnd = (e, gestureState) => {
         const {
-            initialTop, initialLeft, initialWidth, initialHeight, draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR,
+            initialTop, initialLeft, initialWidth, initialHeight, draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR, ratio,
         } = this.state
 
         const state = {
