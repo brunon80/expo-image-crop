@@ -382,7 +382,7 @@ class ExpoImageManipulator extends Component {
                                                             marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                                                         }}
                                                     >
-                                                        <MaterialIconss style={{ transform: [{ rotate: '270deg' }] }} size={20} name="flip" color="white" />
+                                                        <MaterialIcons style={{ transform: [{ rotate: '270deg' }] }} size={20} name="flip" color="white" />
                                                     </TouchableOpacity>
                                                 </View>
                                             )
@@ -397,7 +397,7 @@ class ExpoImageManipulator extends Component {
                                                             marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                                                         }}
                                                     >
-                                                        <MaterialIconss size={20} name="flip" color="white" />
+                                                        <MaterialIcons size={20} name="flip" color="white" />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => { onPictureChoosed({ uri, base64 }); this.onToggleModal() }}
                                                         style={{
@@ -427,7 +427,7 @@ class ExpoImageManipulator extends Component {
                                         }}
                                     >
                                         <View style={{ flexDirection: 'row' }}>
-                                            <MaterialIconss style={{ flexDirection: 'row', marginRight: 10 }} size={24} name={!processing ? 'done' : 'access-time'} color="white" />
+                                            <MaterialIcons style={{ flexDirection: 'row', marginRight: 10 }} size={24} name={!processing ? 'done' : 'access-time'} color="white" />
                                             <Text style={{ fontWeight: '500', color: 'white', fontSize: 18 }}>{!processing ? btnTexts.crop : btnTexts.processing}</Text>
                                         </View>
                                     </TouchableOpacity>
