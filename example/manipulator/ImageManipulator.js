@@ -76,7 +76,7 @@ class ExpoImageManipulator extends Component {
     }
 
     async onConvertImageToEditableSize() {
-        const { photo: { uri: rawUri } } = this.props
+        const { photo: { uri: rawUri }, acceptedImageSaveOption } = this.props
         Image.getSize(rawUri, async (imgW, imgH) => {
             const { convertedWidth, convertedheight } = this.onGetCorrectSizes(imgW, imgH)
             const { uri, width: w, height } = await ImageManipulator.manipulateAsync(rawUri,
@@ -87,7 +87,7 @@ class ExpoImageManipulator extends Component {
                             height: convertedheight,
                         },
                     },
-                ])
+                ], acceptedImageSaveOption)
             this.setState({
                 uri,
             })
@@ -505,6 +505,11 @@ ExpoImageManipulator.defaultProps = {
         base64: false,
     },
     fixedMask: null,
+    acceptedImageSaveOption: {
+        compress: 1,
+        format: ImageManipulator.SaveFormat.PNG,
+        base64: false,
+    },
 }
 
 ExpoImageManipulator.propTypes = {
@@ -517,4 +522,5 @@ ExpoImageManipulator.propTypes = {
     photo: PropTypes.object.isRequired,
     onToggleModal: PropTypes.func.isRequired,
     ratio: PropTypes.object,
+    acceptedImageSaveOption: PropTypes.object,
 }
