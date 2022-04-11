@@ -440,7 +440,7 @@ class ExpoImageManipulator extends Component {
                 <View style={{ flex: 1, backgroundColor: 'black', width: Dimensions.get('window').width }}>
                     <ScrollView
                         style={{ position: 'relative', flex: 1 }}
-                        contentContainerStyle={{ backgroundColor: 'black' }}
+                        contentContainerStyle={{ backgroundColor: 'black', flex: 1, justifyContent: 'center' }}
                         maximumZoomScale={5}
                         minimumZoomScale={0.5}
                         onScroll={this.onHandleScroll}
