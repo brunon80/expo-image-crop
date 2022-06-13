@@ -3,7 +3,7 @@ import {
     Dimensions, View, Image, Text,
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
-import * as Permissions from 'expo-permissions'
+import { Camera } from 'expo-camera'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import ImageManipulator from './manipulator/ImageManipulator'
 
@@ -21,7 +21,7 @@ export default class App extends React.Component {
         this.setState({ isVisible: !isVisible })
     }
     _pickImage = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
         if (status === 'granted') {
             const result = await ImagePicker.launchImageLibraryAsync()
             if (!result.cancelled) {
@@ -33,7 +33,7 @@ export default class App extends React.Component {
     };
 
     _pickCameraImage = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA)
+        const { status } = await Camera.requestCameraPermissionsAsync()
         if (status === 'granted') {
             const result = await ImagePicker.launchCameraAsync()
 
