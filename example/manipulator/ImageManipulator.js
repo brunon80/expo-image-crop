@@ -8,7 +8,7 @@ import {
     Text,
     SafeAreaView,
     TouchableOpacity,
-    YellowBox,
+    LogBox,
 } from 'react-native'
 import * as ImageManipulator from 'expo-image-manipulator'
 import * as FileSystem from 'expo-file-system'
@@ -21,8 +21,8 @@ import ImageCropOverlay from './ImageCropOverlay'
 
 const { width } = Dimensions.get('window')
 
-YellowBox.ignoreWarnings(['componentWillReceiveProps', 'componentWillUpdate', 'componentWillMount'])
-YellowBox.ignoreWarnings([
+LogBox.ignoreLogs(['componentWillReceiveProps', 'componentWillUpdate', 'componentWillMount'])
+LogBox.ignoreLogs([
     'Warning: componentWillMount is deprecated',
     'Warning: componentWillReceiveProps is deprecated',
     'Module RCTImageLoader requires',
