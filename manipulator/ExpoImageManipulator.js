@@ -14,10 +14,9 @@ import * as ImageManipulator from 'expo-image-manipulator'
 import * as FileSystem from 'expo-file-system'
 import PropTypes from 'prop-types'
 import AutoHeightImage from 'react-native-auto-height-image'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import ImageCropOverlay from './ImageCropOverlay'
+import { MaterialIcons as MaterialIcon, MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window')
 
