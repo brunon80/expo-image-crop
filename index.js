@@ -1,5 +1,5 @@
-import ImageManipulator from './example/manipulator/ImageManipulator'
+import ExpoImageManipulator from './manipulator/ExpoImageManipulator'
 
 export {
-    ImageManipulator,
+    ExpoImageManipulator,
 }

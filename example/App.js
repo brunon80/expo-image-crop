@@ -5,7 +5,7 @@ import {
 import * as ImagePicker from 'expo-image-picker'
 import { Camera } from 'expo-camera'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import ImageManipulator from './manipulator/ImageManipulator'
+import ExpoImageManipulator from '../manipulator/ExpoImageManipulator'
 
 import HybridTouch from './HybridTouch'
 
@@ -93,7 +93,7 @@ export default class App extends React.Component {
                 {
                     uri
                 && (
-                    <ImageManipulator
+                    <ExpoImageManipulator
                         photo={{ uri }}
                         isVisible={isVisible}
                         onPictureChoosed={(data) => {

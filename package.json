@@ -5,6 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.11.1",
     "eslint-config-airbnb": "^17.1.0",
