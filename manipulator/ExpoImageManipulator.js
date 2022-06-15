@@ -473,8 +473,8 @@ class ExpoImageManipulator extends Component {
                                 initialHeight={(fixedMask && fixedMask.height) || cropHeight}
                                 initialTop={cropInitialTop}
                                 initialLeft={cropInitialLeft}
-                                minHeight={(fixedMask && fixedMask.height) || 100}
                                 minWidth={(fixedMask && fixedMask.width) || 100}
+                                minHeight={(fixedMask && fixedMask.height) || (ratio ? 100 * ratio.height / ratio.width : 100)}
                                 borderColor={borderColor}
                                 ratio={ratio || {ratio: {height: null, width: null, }}}
                             />
