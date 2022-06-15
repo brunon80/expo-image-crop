@@ -197,30 +197,19 @@ class ImageCropOverlay extends React.Component {
         const {
             initialLeft, initialTop, initialWidth, initialHeight,
         } = this.state
-        const xPos = parseInt((x - initialLeft) / (initialWidth / 3))
-        const yPos = parseInt((y - initialTop - 64) / (initialHeight / 3))
 
-        const index = yPos * 3 + xPos
-        if (index == 0) {
-            return 'tl'
-        } if (index == 1) {
-            return 'tm'
-        } if (index == 2) {
-            return 'tr'
-        } if (index == 3) {
-            return 'ml'
-        } if (index == 4) {
-            return 'mm'
-        } if (index == 5) {
-            return 'mr'
-        } if (index == 6) {
-            return 'bl'
-        } if (index == 7) {
-            return 'bm'
-        } if (index == 8) {
-            return 'br'
-        }
-        return ''
+        const xPercent = (x - initialLeft) / (initialWidth)
+        const yPercent = (y - initialTop - this.props.safeAreaHeight) / (initialHeight)
+
+        const xKey =  xPercent <= 0.33 ? 'l'
+                    : xPercent >  0.66 ? 'r'
+                                       : 'm'
+
+        const yKey =  yPercent <= 0.33 ? 't'
+                    : yPercent >  0.66 ? 'b'
+                                       : 'm'
+
+        return yKey + xKey
     }
 
     // Should we become active when the user presses down on the square?

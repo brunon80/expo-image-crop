@@ -14,7 +14,6 @@ import * as ImageManipulator from 'expo-image-manipulator'
 import * as FileSystem from 'expo-file-system'
 import PropTypes from 'prop-types'
 import AutoHeightImage from 'react-native-auto-height-image'
-import { isIphoneX } from 'react-native-iphone-x-helper'
 import ImageCropOverlay from './ImageCropOverlay'
 import { MaterialIcons as MaterialIcon, MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 
@@ -34,6 +33,7 @@ class ExpoImageManipulator extends Component {
             cropMode: false,
             processing: false,
             zoomScale: 1,
+            safeAreaHeight: 0
         }
 
         this.scrollOffset = 0
@@ -174,10 +174,7 @@ class ExpoImageManipulator extends Component {
 
     getCropBounds = (actualWidth, actualHeight) => {
         const imageRatio = actualHeight / actualWidth
-        let originalHeight = Dimensions.get('window').height - 64
-        if (isIphoneX()) {
-            originalHeight = Dimensions.get('window').height - 122
-        }
+        const originalHeight = Dimensions.get('window').height - this.state.safeAreaHeight;
         const renderedImageWidth = imageRatio < (originalHeight / width) ? width : originalHeight / imageRatio
         const renderedImageHeight = imageRatio < (originalHeight / width) ? width * imageRatio : originalHeight
 
@@ -305,10 +302,7 @@ class ExpoImageManipulator extends Component {
         } = this.state
 
         const imageRatio = this.actualSize.height / this.actualSize.width
-        let originalHeight = Dimensions.get('window').height - 64
-        if (isIphoneX()) {
-            originalHeight = Dimensions.get('window').height - 122
-        }
+        const originalHeight = Dimensions.get('window').height - this.state.safeAreaHeight
 
         const cropRatio = originalHeight / width
 
@@ -340,6 +334,7 @@ class ExpoImageManipulator extends Component {
                     style={{
                         width, flexDirection: 'row', backgroundColor: 'black', justifyContent: 'space-between',
                     }}
+                    onLayout={e => this.setState({safeAreaHeight: e.nativeEvent.layout.height})}
                 >
                     <ScrollView scrollEnabled={false}
                         horizontal
@@ -477,6 +472,7 @@ class ExpoImageManipulator extends Component {
                                 minHeight={(fixedMask && fixedMask.height) || (ratio ? 100 * ratio.height / ratio.width : 100)}
                                 borderColor={borderColor}
                                 ratio={ratio || {ratio: {height: null, width: null, }}}
+                                safeAreaHeight={this.state.safeAreaHeight}
                             />
                         )
                         }
