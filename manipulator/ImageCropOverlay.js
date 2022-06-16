@@ -171,7 +171,7 @@ class ImageCropOverlay extends React.Component {
                         }}
                         >
                             <View style={{
-                                position: 'absolute', left: 5, top: 5, borderLeftWidth: 2, borderTopWidth: 2, height: 48, width: 48, borderColor: '#f4f4f4', borderStyle: 'solid',
+                                position: 'absolute', left: 5, top: 5, borderLeftWidth: 2, borderTopWidth: 2, height: 20, width: 20, borderColor: '#f4f4f4', borderStyle: 'solid',
                             }}
                             />
                         </View>
@@ -184,7 +184,7 @@ class ImageCropOverlay extends React.Component {
                         }}
                         >
                             <View style={{
-                                position: 'absolute', right: 5, top: 5, borderRightWidth: 2, borderTopWidth: 2, height: 48, width: 48, borderColor: '#f4f4f4', borderStyle: 'solid',
+                                position: 'absolute', right: 5, top: 5, borderRightWidth: 2, borderTopWidth: 2, height: 20, width: 20, borderColor: '#f4f4f4', borderStyle: 'solid',
                             }}
                             />
                         </View>
@@ -209,7 +209,7 @@ class ImageCropOverlay extends React.Component {
                         }}
                         >
                             <View style={{
-                                position: 'absolute', left: 5, bottom: 5, borderLeftWidth: 2, borderBottomWidth: 2, height: 48, width: 48, borderColor: '#f4f4f4', borderStyle: 'solid',
+                                position: 'absolute', left: 5, bottom: 5, borderLeftWidth: 2, borderBottomWidth: 2, height: 20, width: 20, borderColor: '#f4f4f4', borderStyle: 'solid',
                             }}
                             />
                         </View>
@@ -219,7 +219,7 @@ class ImageCropOverlay extends React.Component {
                         />
                         <View style={{ flex: 3, position: 'relative' }}>
                             <View style={{
-                                position: 'absolute', right: 5, bottom: 5, borderRightWidth: 2, borderBottomWidth: 2, height: 48, width: 48, borderColor: '#f4f4f4', borderStyle: 'solid',
+                                position: 'absolute', right: 5, bottom: 5, borderRightWidth: 2, borderBottomWidth: 2, height: 20, width: 20, borderColor: '#f4f4f4', borderStyle: 'solid',
                             }}
                             />
                         </View>

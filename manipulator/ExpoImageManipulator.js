@@ -309,12 +309,21 @@ class ExpoImageManipulator extends Component {
         let cropWidth = imageRatio < screenRatio ? width : originalHeight / imageRatio
         let cropHeight = imageRatio < screenRatio ? width * imageRatio : originalHeight
 
+        let cropMinWidth = 60
+        let cropMinHeight = 60
+
         if(ratio && ratio.width && ratio.height){
             const cropRatio = ratio.height / ratio.width;
             if(cropRatio > imageRatio){
                 cropWidth = cropHeight / cropRatio
             } else {
                 cropHeight = cropWidth * cropRatio
+            }
+
+            if(cropRatio < 1){
+                cropMinWidth = cropMinHeight / cropRatio
+            } else {
+                cropMinHeight = cropMinWidth * cropRatio
             }
         }
 
@@ -477,8 +486,8 @@ class ExpoImageManipulator extends Component {
                                 initialHeight={(fixedMask && fixedMask.height) || cropHeight}
                                 initialTop={cropInitialTop}
                                 initialLeft={cropInitialLeft}
-                                minWidth={(fixedMask && fixedMask.width) || 100}
-                                minHeight={(fixedMask && fixedMask.height) || (ratio ? 100 * ratio.height / ratio.width : 100)}
+                                minWidth={(fixedMask && fixedMask.width) || cropMinWidth}
+                                minHeight={(fixedMask && fixedMask.height) || cropMinHeight}
                                 borderColor={borderColor}
                                 ratio={ratio || {ratio: {height: null, width: null, }}}
                                 safeAreaHeight={this.state.safeAreaHeight}
