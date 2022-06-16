@@ -112,7 +112,7 @@ export default class App extends React.Component {
                             crop: 'Cortar',
                             processing: 'Processando',
                         }}
-                        ratio={{width: 16, height: 8}}
+                        ratio={{width: 2, height: 1}}
                     />
                 )
                 }

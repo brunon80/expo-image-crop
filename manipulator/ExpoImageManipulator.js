@@ -304,10 +304,19 @@ class ExpoImageManipulator extends Component {
         const imageRatio = this.actualSize.height / this.actualSize.width
         const originalHeight = Dimensions.get('window').height - this.state.safeAreaHeight
 
-        const cropRatio = originalHeight / width
+        const screenRatio = originalHeight / width
 
-        const cropWidth = imageRatio < cropRatio ? width : originalHeight / imageRatio
-        const cropHeight = imageRatio < cropRatio ? width * imageRatio : originalHeight
+        let cropWidth = imageRatio < screenRatio ? width : originalHeight / imageRatio
+        let cropHeight = imageRatio < screenRatio ? width * imageRatio : originalHeight
+
+        if(ratio && ratio.width && ratio.height){
+            const cropRatio = ratio.height / ratio.width;
+            if(cropRatio > imageRatio){
+                cropWidth = cropHeight / cropRatio
+            } else {
+                cropHeight = cropWidth * cropRatio
+            }
+        }
 
         const cropInitialTop = (originalHeight - cropHeight) / 2.0
         const cropInitialLeft = (width - cropWidth) / 2.0

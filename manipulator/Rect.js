@@ -1,11 +1,13 @@
 class Rect
 {
-    constructor(top, left, width, height, fixRatio){
+    constructor(top, left, width, height, ratio, minWidth, minHeight){
         this.top = top
         this.left = left
         this.width = width
         this.height = height
-        this.ratio = fixRatio ? width / height : undefined
+        this.ratio = ratio
+        this.minHeight = minHeight
+        this.minWidth = minWidth
 
         this.fix = {
             top: false,
@@ -39,20 +41,29 @@ class Rect
         this.fix.top = true
     }
 
-    moveRight(amount, checkRatio = true){
-        this.width += amount;
+    _moveRight(amount){
+        const newWidth = this.width + amount
+        if(newWidth < this.minWidth){
+            this.width = this.minWidth
+        } else {
+            this.width = newWidth;
+        }
         
         if(!this.fix.left){
             this.left += amount;
         }
+    }
 
-        if(checkRatio && this.ratio){
+    moveRight(amount){
+        this._moveRight(amount)
+
+        if(this.ratio){
             const height = this.width / this.ratio
             const diff =  height - this.height
             if(this.fix.top){
-                this.moveBottom(diff, false)
+                this._moveBottom(diff)
             } else if(this.fix.bottom) {
-                this.moveTop(-diff, false)
+                this._moveTop(-diff)
             } else if(this.fix.left) {
                 this.top -= diff / 2
                 this.height += diff
@@ -60,19 +71,31 @@ class Rect
         }
     }
 
-    moveLeft(amount, checkRatio = true){
-        this.left += amount;
+    _moveLeft(amount){
         if(this.fix.right){
-            this.width -= amount;
+            const newWidth = this.width - amount
+            if(newWidth < this.minWidth){
+                const diff = newWidth - this.minWidth
+                amount += diff
+                this.width = this.minWidth
+            } else {
+                this.width = newWidth
+            }
         }
 
-        if(checkRatio && this.ratio){
+        this.left += amount
+    }
+
+    moveLeft(amount){
+        this._moveLeft(amount)
+
+        if(this.ratio){
             const height = this.width / this.ratio
             const diff =  height - this.height
             if(this.fix.top){
-                this.moveBottom(diff, false)
+                this._moveBottom(diff)
             } else if(this.fix.bottom) {
-                this.moveTop(-diff, false)
+                this._moveTop(-diff)
             } else if(this.fix.right) {
                 this.top -= diff / 2
                 this.height += diff
@@ -80,19 +103,32 @@ class Rect
         }
     }
 
-    moveTop(amount, checkRatio = true){
-        this.top += amount;
+    _moveTop(amount){
         if(this.fix.bottom){
-            this.height -= amount;
+            const newHeight = this.height - amount
+            if(newHeight < this.minHeight){
+                const diff = newHeight - this.minHeight
+                amount += diff
+                this.height = this.minHeight
+            } else {
+                this.height = newHeight
+            }
+
         }
 
-        if(checkRatio && this.ratio){
+        this.top += amount
+    }
+
+    moveTop(amount){
+        this._moveTop(amount)
+
+        if(this.ratio){
             const width = this.height * this.ratio
             const diff =  width - this.width
             if(this.fix.left){
-                this.moveRight(diff, false)
+                this._moveRight(diff)
             } else if(this.fix.right) {
-                this.moveLeft(-diff, false)
+                this._moveLeft(-diff)
             } else if(this.fix.bottom) {
                 this.left -= diff / 2
                 this.width += diff
@@ -100,19 +136,29 @@ class Rect
         }
     }
 
-    moveBottom(amount, checkRatio = true){
-        this.height += amount;
-        if(!this.fix.top){
-            this.top -= amount;
+    _moveBottom(amount){
+        const newHeight = this.height + amount;
+        if(newHeight < this.minHeight){
+            this.height = this.minHeight
+        } else {
+            this.height = newHeight
         }
 
-        if(checkRatio && this.ratio){
+        if(!this.fix.top){
+            this.top -= amount
+        }
+    }
+
+    moveBottom(amount){
+        this._moveBottom(amount)
+
+        if(this.ratio){
             const width = this.height * this.ratio
             const diff =  width - this.width
             if(this.fix.left){
-                this.moveRight(diff, false)
+                this._moveRight(diff)
             } else if(this.fix.right) {
-                this.moveLeft(-diff, false)
+                this._moveLeft(-diff)
             } else if(this.fix.top) {
                 this.left -= diff / 2
                 this.width += diff

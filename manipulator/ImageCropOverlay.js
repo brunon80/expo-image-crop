@@ -24,7 +24,7 @@ class ImageCropOverlay extends React.Component {
             initialTop: this.props.initialTop,
             initialLeft: this.props.initialLeft,
             initialWidth: this.props.initialWidth,
-            initialHeight: this.hasRatio ? this.props.initialWidth / this.ratio : this.props.initialHeight,
+            initialHeight: this.props.initialHeight,
     
             offsetTop: 0,
             offsetLeft: 0,
@@ -48,7 +48,15 @@ class ImageCropOverlay extends React.Component {
             draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR, initialTop, initialLeft, initialHeight, initialWidth, offsetTop, offsetLeft
         } = this.state
 
-        const rect = new Rect(initialTop, initialLeft, initialWidth, initialHeight, this.hasRatio)
+        const rect = new Rect(
+            initialTop,
+            initialLeft,
+            initialWidth,
+            initialHeight,
+            this.ratio,
+            this.props.minWidth,
+            this.props.minHeight
+        )
         
         if(draggingTL){
             rect.fixRight()
