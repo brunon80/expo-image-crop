@@ -1,28 +1,37 @@
 import React, { Component } from 'react'
 import { View, PanResponder, Dimensions } from 'react-native'
+import Rect from './Rect'
 
 class ImageCropOverlay extends React.Component {
-    state = {
-        draggingTL: false,
-        draggingTM: false,
-        draggingTR: false,
-        draggingML: false,
-        draggingMM: false,
-        draggingMR: false,
-        draggingBL: false,
-        draggingBM: false,
-        draggingBR: false,
-        initialTop: this.props.initialTop,
-        initialLeft: this.props.initialLeft,
-        initialWidth: this.props.initialWidth,
-        initialHeight: this.props.initialHeight,
-        ratio: this.props.ratio,
+    constructor(props){
+        super(props);
 
-        offsetTop: 0,
-        offsetLeft: 0,
+        this.hasRatio = this.props.ratio && this.props.ratio.width && this.props.ratio.height
+        if(this.hasRatio){
+            this.ratio = this.props.ratio.width / this.props.ratio.height
+        }
+        
+        this.state = {
+            draggingTL: false,
+            draggingTM: false,
+            draggingTR: false,
+            draggingML: false,
+            draggingMM: false,
+            draggingMR: false,
+            draggingBL: false,
+            draggingBM: false,
+            draggingBR: false,
+            initialTop: this.props.initialTop,
+            initialLeft: this.props.initialLeft,
+            initialWidth: this.props.initialWidth,
+            initialHeight: this.hasRatio ? this.props.initialWidth / this.ratio : this.props.initialHeight,
+    
+            offsetTop: 0,
+            offsetLeft: 0,
+        }
+    
+        this.panResponder = {}
     }
-
-    panResponder = {}
 
     UNSAFE_componentWillMount() {
         this.panResponder = PanResponder.create({
@@ -34,39 +43,58 @@ class ImageCropOverlay extends React.Component {
         })
     }
 
+    calcRect(){
+        const {
+            draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR, initialTop, initialLeft, initialHeight, initialWidth, offsetTop, offsetLeft
+        } = this.state
+
+        const rect = new Rect(initialTop, initialLeft, initialWidth, initialHeight, this.hasRatio)
+        
+        if(draggingTL){
+            rect.fixRight()
+            rect.fixBottom()
+            rect.moveLeft(offsetLeft)
+            rect.moveTop(offsetTop)
+        } else if(draggingTR){
+            rect.fixLeft()
+            rect.fixBottom()
+            rect.moveRight(offsetLeft)
+            rect.moveTop(offsetTop)
+        } else if(draggingBL){
+            rect.fixRight()
+            rect.fixTop()
+            rect.moveLeft(offsetLeft)
+            rect.moveBottom(offsetTop)
+        } else if(draggingBR){
+            rect.fixTop()
+            rect.fixLeft()
+            rect.moveRight(offsetLeft)
+            rect.moveBottom(offsetTop)
+        } else if(draggingTM){
+            rect.fixBottom()
+            rect.moveTop(offsetTop)
+        } else if(draggingBM){
+            rect.fixTop()
+            rect.moveBottom(offsetTop)
+        } else if(draggingMR){
+            rect.fixLeft()
+            rect.moveRight(offsetLeft)
+        } else if(draggingML){
+            rect.fixRight()
+            rect.moveLeft(offsetLeft)
+        } else if(draggingMM){
+            rect.moveTop(offsetTop)
+            rect.moveLeft(offsetLeft)
+        }
+
+        return rect.toObject();
+    }
+
     render() {
         const {
-            draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR, initialTop, initialLeft, initialHeight, initialWidth, offsetTop, offsetLeft, ratio,
+            draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR, initialTop, initialLeft, initialHeight, initialWidth, offsetTop, offsetLeft,
         } = this.state
-        const style = {}
-
-        style.top = initialTop + ((draggingTL || draggingTM || draggingTR || draggingMM) ? offsetTop : 0)
-        style.left = initialLeft + ((draggingTL || draggingML || draggingBL || draggingMM) ? offsetLeft : 0)
-        style.width = initialWidth + ((draggingTL || draggingML || draggingBL) ? -offsetLeft : (draggingTM || draggingMM || draggingBM) ? 0 : offsetLeft)
-        style.height = initialHeight + ((draggingTL || draggingTM || draggingTR) ? -offsetTop : (draggingML || draggingMM || draggingMR) ? 0 : offsetTop)
-
-        //If ratio specified, modify width and height to maintain ratio
-        if ( ratio && ratio.height && ratio.width) {
-            if (style.width * ratio.width > style.height * ratio.height) {
-                style.height = style.width * (ratio.height / ratio.width)
-            }
-            if (style.height * ratio.height > style.width * ratio.width) {
-                style.width = style.height * (ratio.width / ratio.height)
-            }
-        }
-
-        if (style.width > this.props.initialWidth) {
-            style.width = this.props.initialWidth
-        }
-        if (style.width < this.props.minWidth) {
-            style.width = this.props.minWidth
-        }
-        if (style.height > this.props.initialHeight) {
-            style.height = this.props.initialHeight
-        }
-        if (style.height < this.props.minHeight) {
-            style.height = this.props.minHeight
-        }
+        const style = this.calcRect()
         const { borderColor } = this.props
         return (
             <View {...this.panResponder.panHandlers}
@@ -252,9 +280,7 @@ class ImageCropOverlay extends React.Component {
 
     // When the touch/mouse is lifted
     handlePanResponderEnd = (e, gestureState) => {
-        const {
-            initialTop, initialLeft, initialWidth, initialHeight, draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR, ratio,
-        } = this.state
+        const rect = this.calcRect();
 
         const state = {
             draggingTL: false,
@@ -268,33 +294,10 @@ class ImageCropOverlay extends React.Component {
             draggingBR: false,
             offsetTop: 0,
             offsetLeft: 0,
-        }
-
-        state.initialTop = initialTop + ((draggingTL || draggingTM || draggingTR || draggingMM) ? gestureState.dy : 0)
-        state.initialLeft = initialLeft + ((draggingTL || draggingML || draggingBL || draggingMM) ? gestureState.dx : 0)
-        state.initialWidth = initialWidth + ((draggingTL || draggingML || draggingBL) ? -gestureState.dx : (draggingTM || draggingMM || draggingBM) ? 0 : gestureState.dx)
-        state.initialHeight = initialHeight + ((draggingTL || draggingTM || draggingTR) ? -gestureState.dy : (draggingML || draggingMM || draggingMR) ? 0 : gestureState.dy)
-
-        if ( ratio && ratio.height && ratio.width) {
-            if (state.initialWidth * ratio.width > state.initialHeight * ratio.height) {
-                state.initialHeight = state.initialWidth * (ratio.height / ratio.width)
-            }
-            if (state.initialHeight * ratio.height > state.initialWidth * ratio.width) {
-                state.initialWidth = state.initialHeight * (ratio.width / ratio.height)
-            }
-        }
-
-        if (state.initialWidth > this.props.initialWidth) {
-            state.initialWidth = this.props.initialWidth
-        }
-        if (state.initialWidth < this.props.minWidth) {
-            state.initialWidth = this.props.minWidth
-        }
-        if (state.initialHeight > this.props.initialHeight) {
-            state.initialHeight = this.props.initialHeight
-        }
-        if (state.initialHeight < this.props.minHeight) {
-            state.initialHeight = this.props.minHeight
+            initialTop: rect.top,
+            initialLeft: rect.left,
+            initialHeight: rect.height,
+            initialWidth: rect.width
         }
 
         this.setState(state)
