@@ -45,7 +45,7 @@ class ImageCropOverlay extends React.Component {
         } = this.state
         const { ratio } = this.props
 
-        const rect = new CropRectCalculator(
+        const calculator = new CropRectCalculator(
             new Rect(
                 initialTop,
                 initialLeft,
@@ -53,6 +53,7 @@ class ImageCropOverlay extends React.Component {
                 initialHeight,
             ),
             ratio && ratio.width && ratio.height ? ratio.width / ratio.height : undefined,
+            // undefined,
             this.props.minWidth,
             this.props.minHeight,
             new Rect(
@@ -64,43 +65,42 @@ class ImageCropOverlay extends React.Component {
         )
         
         if(draggingTL){
-            rect.fixRight()
-            rect.fixBottom()
-            rect.moveLeft(offsetLeft)
-            rect.moveTop(offsetTop)
+            calculator.fixRight()
+            calculator.fixBottom()
+            calculator.moveLeft(offsetLeft)
+            calculator.moveTop(offsetTop)
         } else if(draggingTR){
-            rect.fixLeft()
-            rect.fixBottom()
-            rect.moveRight(offsetLeft)
-            rect.moveTop(offsetTop)
+            calculator.fixLeft()
+            calculator.fixBottom()
+            calculator.moveRight(offsetLeft)
+            calculator.moveTop(offsetTop)
         } else if(draggingBL){
-            rect.fixRight()
-            rect.fixTop()
-            rect.moveLeft(offsetLeft)
-            rect.moveBottom(offsetTop)
+            calculator.fixRight()
+            calculator.fixTop()
+            calculator.moveLeft(offsetLeft)
+            calculator.moveBottom(offsetTop)
         } else if(draggingBR){
-            rect.fixTop()
-            rect.fixLeft()
-            rect.moveRight(offsetLeft)
-            rect.moveBottom(offsetTop)
+            calculator.fixTop()
+            calculator.fixLeft()
+            calculator.moveRight(offsetLeft)
+            calculator.moveBottom(offsetTop)
         } else if(draggingTM){
-            rect.fixBottom()
-            rect.moveTop(offsetTop)
+            calculator.fixBottom()
+            calculator.moveTop(offsetTop)
         } else if(draggingBM){
-            rect.fixTop()
-            rect.moveBottom(offsetTop)
+            calculator.fixTop()
+            calculator.moveBottom(offsetTop)
         } else if(draggingMR){
-            rect.fixLeft()
-            rect.moveRight(offsetLeft)
+            calculator.fixLeft()
+            calculator.moveRight(offsetLeft)
         } else if(draggingML){
-            rect.fixRight()
-            rect.moveLeft(offsetLeft)
+            calculator.fixRight()
+            calculator.moveLeft(offsetLeft)
         } else if(draggingMM){
-            rect.moveTop(offsetTop)
-            rect.moveLeft(offsetLeft)
+            calculator.move(offsetTop, offsetLeft)
         }
 
-        return rect.toObject();
+        return calculator.toObject();
     }
 
     render() {

@@ -31,6 +31,52 @@ class CropRectCalculator
         this.fix.top = true
     }
 
+    move(yAmount, xAmount){
+        this.cropRect.left += xAmount
+        if(this.cropRect.left < this.imageRect.left){
+            const leftDiff = this.imageRect.left - this.cropRect.left
+            this.cropRect.left += leftDiff
+        }
+
+        if(this.cropRect.right > this.imageRect.right){
+            const rightDiff =  this.cropRect.right - this.imageRect.right
+            this.cropRect.left -= rightDiff
+        }
+
+        this.cropRect.top += yAmount
+        if(this.cropRect.top < this.imageRect.top){
+            const topDiff = this.imageRect.top - this.cropRect.top
+            this.cropRect.top += topDiff
+        }
+
+        if(this.cropRect.bottom > this.imageRect.bottom){
+            const bottomDiff =  this.cropRect.bottom - this.imageRect.bottom
+            this.cropRect.top -= bottomDiff
+        }
+    }
+
+    _resizeWidthFromCenter(amount){
+        this.cropRect.left -= amount / 2
+        this.cropRect.width += amount
+
+        if(this.cropRect.left < this.imageRect.left){
+            const leftDiff = this.imageRect.left - this.cropRect.left
+            this.cropRect.left += leftDiff
+            this.cropRect.width -= leftDiff * 2
+        }
+    }
+
+    _resizeHeightFromCenter(amount){
+        this.cropRect.top -= amount / 2
+        this.cropRect.height += amount
+
+        if(this.cropRect.top < this.imageRect.top){
+            const topDiff = this.imageRect.top - this.cropRect.top
+            this.cropRect.top += topDiff
+            this.cropRect.height -= topDiff * 2
+        }
+    }
+
     _moveRight(amount){
         const newWidth = this.cropRect.width + amount
         if(newWidth < this.minWidth){
@@ -42,6 +88,14 @@ class CropRectCalculator
         if(!this.fix.left){
             this.cropRect.left += amount;
         }
+
+        if(this.cropRect.right > this.imageRect.right){
+            const maxDiff = this.cropRect.right - this.imageRect.right
+            this.cropRect.width -= maxDiff
+            if(!this.fix.left){
+                this.cropRect.left -= maxDiff;
+            }
+        }
     }
 
     moveRight(amount){
@@ -49,14 +103,19 @@ class CropRectCalculator
 
         if(this.ratio){
             const height = this.cropRect.width / this.ratio
-            const diff =  height - this.cropRect.height
+            const heightDiff =  height - this.cropRect.height
             if(this.fix.top){
-                this._moveBottom(diff)
+                this._moveBottom(heightDiff)
             } else if(this.fix.bottom) {
-                this._moveTop(-diff)
+                this._moveTop(-heightDiff)
             } else if(this.fix.left) {
-                this.cropRect.top -= diff / 2
-                this.cropRect.height += diff
+                this._resizeHeightFromCenter(heightDiff)
+            }
+
+            const width = this.cropRect.height * this.ratio
+            if(this.cropRect.width > width){
+                const widthDiff = this.cropRect.width - width
+                this.cropRect.width -= widthDiff
             }
         }
     }
@@ -74,6 +133,15 @@ class CropRectCalculator
         }
 
         this.cropRect.left += amount
+
+        if(this.cropRect.left < this.imageRect.left){
+            const maxDiff = this.imageRect.left - this.cropRect.left
+            if(this.fix.right){
+                this.cropRect.width -= maxDiff
+            }
+
+            this.cropRect.left += maxDiff
+        }
     }
 
     moveLeft(amount){
@@ -81,14 +149,20 @@ class CropRectCalculator
 
         if(this.ratio){
             const height = this.cropRect.width / this.ratio
-            const diff =  height - this.cropRect.height
+            const heightDiff =  height - this.cropRect.height
             if(this.fix.top){
-                this._moveBottom(diff)
+                this._moveBottom(heightDiff)
             } else if(this.fix.bottom) {
-                this._moveTop(-diff)
+                this._moveTop(-heightDiff)
             } else if(this.fix.right) {
-                this.cropRect.top -= diff / 2
-                this.cropRect.height += diff
+                this._resizeHeightFromCenter(heightDiff)
+            }
+
+            const width = this.cropRect.height * this.ratio
+            if(this.cropRect.width > width){
+                const widthDiff = this.cropRect.width - width
+                this.cropRect.width -= widthDiff
+                this.move(0, widthDiff)
             }
         }
     }
@@ -107,6 +181,15 @@ class CropRectCalculator
         }
 
         this.cropRect.top += amount
+
+        if(this.cropRect.top < this.imageRect.top){
+            const maxDiff = this.imageRect.top - this.cropRect.top
+            if(this.fix.bottom){
+                this.cropRect.height -= maxDiff
+            }
+
+            this.cropRect.top += maxDiff
+        }
     }
 
     moveTop(amount){
@@ -114,14 +197,20 @@ class CropRectCalculator
 
         if(this.ratio){
             const width = this.cropRect.height * this.ratio
-            const diff =  width - this.cropRect.width
+            const widthDiff =  width - this.cropRect.width
             if(this.fix.left){
-                this._moveRight(diff)
+                this._moveRight(widthDiff)
             } else if(this.fix.right) {
-                this._moveLeft(-diff)
+                this._moveLeft(-widthDiff)
             } else if(this.fix.bottom) {
-                this.cropRect.left -= diff / 2
-                this.cropRect.width += diff
+                this._resizeWidthFromCenter(widthDiff)
+            }
+
+            const height = this.cropRect.width / this.ratio
+            if(this.cropRect.height > height){
+                const heightDiff = this.cropRect.height - height
+                this.cropRect.height -= heightDiff
+                this.move(heightDiff, 0)
             }
         }
     }
@@ -137,6 +226,15 @@ class CropRectCalculator
         if(!this.fix.top){
             this.cropRect.top -= amount
         }
+
+
+        if(this.cropRect.bottom > this.imageRect.bottom){
+            const maxDiff = this.cropRect.bottom - this.imageRect.bottom
+            this.cropRect.height -= maxDiff
+            if(!this.fix.top){
+                this.cropRect.top -= maxDiff;
+            }
+        }
     }
 
     moveBottom(amount){
@@ -144,14 +242,20 @@ class CropRectCalculator
 
         if(this.ratio){
             const width = this.cropRect.height * this.ratio
-            const diff =  width - this.cropRect.width
+            const widthDiff =  width - this.cropRect.width
+
             if(this.fix.left){
-                this._moveRight(diff)
+                this._moveRight(widthDiff)
             } else if(this.fix.right) {
-                this._moveLeft(-diff)
+                this._moveLeft(-widthDiff)
             } else if(this.fix.top) {
-                this.cropRect.left -= diff / 2
-                this.cropRect.width += diff
+                this._resizeWidthFromCenter(widthDiff)
+            }
+
+            const height = this.cropRect.width / this.ratio
+            if(this.cropRect.height > height){
+                const heightDiff = height - this.cropRect.height
+                this.cropRect.height += heightDiff
             }
         }
     }    
