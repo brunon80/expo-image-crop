@@ -36,7 +36,7 @@ class ExpoImageManipulator extends Component {
             safeAreaHeight: 0,
             imageLayout: { x: 0, y: 0, width: 0, height: 0 },
             enableScroll: true,
-            scrollOffset: 0
+            scrollOffsetY: 0
         }
 
         this.currentPos = {
@@ -296,7 +296,7 @@ class ExpoImageManipulator extends Component {
             }
         }
 
-        const cropInitialTop = (Math.min(this.state.imageLayout.height, screenHeight) - cropHeight) / 2.0
+        const cropInitialTop = ((Math.min(this.state.imageLayout.height, screenHeight) - cropHeight) / 2.0) + this.state.scrollOffsetY
         const cropInitialLeft = (screenWidth - cropWidth) / 2.0
 
 
@@ -424,7 +424,7 @@ class ExpoImageManipulator extends Component {
                         contentContainerStyle={{ backgroundColor: 'black', justifyContent: 'center' }}
                         bounces={false}
                         scrollEnabled={this.state.enableScroll}
-                        onScrollEndDrag={e => this.setState({scrollOffset: e.nativeEvent.contentOffset.y})}
+                        onScrollEndDrag={e => this.setState({scrollOffsetY: e.nativeEvent.contentOffset.y})}
                     >
                         <AutoHeightImage
                             source={{ uri }}
@@ -452,7 +452,7 @@ class ExpoImageManipulator extends Component {
                                 ratio={ratio || {ratio: {height: null, width: null, }}}
                                 safeAreaHeight={this.state.safeAreaHeight}
                                 imageLayout={this.state.imageLayout}
-                                scrollOffset={this.state.scrollOffset}
+                                scrollOffsetY={this.state.scrollOffsetY}
                             />
                         )
                         }

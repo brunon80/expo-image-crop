@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    Dimensions, View, Image, Text,
+    Dimensions, View, Image, Text, StatusBar
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { Camera } from 'expo-camera'
@@ -61,6 +61,7 @@ export default class App extends React.Component {
                 height,
             }}
             >
+                <StatusBar barStyle="dark-content" />
                 {uri ? (
                     <Image resizeMode="contain"
                         style={{
