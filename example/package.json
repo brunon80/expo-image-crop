@@ -16,7 +16,7 @@
     "prop-types": "^15.6.2",
     "react": "17.0.1",
     "react-native": "0.64.3",
-    "react-native-auto-height-image": "^1.0.5"
+    "react-native-auto-height-image": "^3.2.4"
   },
   "devDependencies": {
     "babel-preset-expo": "9.0.2"

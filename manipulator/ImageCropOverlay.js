@@ -1,15 +1,11 @@
 import React, { Component } from 'react'
 import { View, PanResponder, Dimensions } from 'react-native'
+import CropRectCalculator from './CropRectCalculator'
 import Rect from './Rect'
 
 class ImageCropOverlay extends React.Component {
     constructor(props){
         super(props);
-
-        this.hasRatio = this.props.ratio && this.props.ratio.width && this.props.ratio.height
-        if(this.hasRatio){
-            this.ratio = this.props.ratio.width / this.props.ratio.height
-        }
         
         this.state = {
             draggingTL: false,
@@ -47,15 +43,24 @@ class ImageCropOverlay extends React.Component {
         const {
             draggingTL, draggingTM, draggingTR, draggingML, draggingMM, draggingMR, draggingBL, draggingBM, draggingBR, initialTop, initialLeft, initialHeight, initialWidth, offsetTop, offsetLeft
         } = this.state
+        const { ratio } = this.props
 
-        const rect = new Rect(
-            initialTop,
-            initialLeft,
-            initialWidth,
-            initialHeight,
-            this.ratio,
+        const rect = new CropRectCalculator(
+            new Rect(
+                initialTop,
+                initialLeft,
+                initialWidth,
+                initialHeight,
+            ),
+            ratio && ratio.width && ratio.height ? ratio.width / ratio.height : undefined,
             this.props.minWidth,
-            this.props.minHeight
+            this.props.minHeight,
+            new Rect(
+                this.props.imageLayout.y,
+                this.props.imageLayout.x,
+                this.props.imageLayout.width,
+                this.props.imageLayout.height
+            )
         )
         
         if(draggingTL){
