@@ -17,7 +17,7 @@ import AutoHeightImage from 'react-native-auto-height-image'
 import ImageCropOverlay from './ImageCropOverlay'
 import { MaterialIcons as MaterialIcon, MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 
-const { width } = Dimensions.get('window')
+const { width: screenWidth } = Dimensions.get('window')
 
 LogBox.ignoreLogs(['componentWillReceiveProps', 'componentWillUpdate', 'componentWillMount'])
 LogBox.ignoreLogs([
@@ -34,10 +34,10 @@ class ExpoImageManipulator extends Component {
             processing: false,
             zoomScale: 1,
             safeAreaHeight: 0,
-            imageLayout: { x: 0, y: 0, width: 0, height: 0 }
+            imageLayout: { x: 0, y: 0, width: 0, height: 0 },
+            enableScroll: true,
+            scrollOffset: 0
         }
-
-        this.scrollOffset = 0
 
         this.currentPos = {
             left: 0,
@@ -76,6 +76,7 @@ class ExpoImageManipulator extends Component {
     }
 
     async onConvertImageToEditableSize() {
+        this.setState({uri: undefined})
         const { photo: { uri: rawUri }, saveOptions } = this.props
         Image.getSize(rawUri, async (imgW, imgH) => {
             const { convertedWidth, convertedheight } = this.onGetCorrectSizes(imgW, imgH)
@@ -90,6 +91,7 @@ class ExpoImageManipulator extends Component {
                 ], saveOptions)
             this.setState({
                 uri,
+                screenTop: 0
             })
             this.actualSize.width = w
             this.actualSize.height = height
@@ -169,54 +171,20 @@ class ExpoImageManipulator extends Component {
         })
     }
 
-    onHandleScroll = (event) => {
-        this.scrollOffset = event.nativeEvent.contentOffset.y
-    }
-
     getCropBounds = (actualWidth, actualHeight) => {
         const imageRatio = actualHeight / actualWidth
-        const originalHeight = Dimensions.get('window').height - this.state.safeAreaHeight;
-        const renderedImageWidth = imageRatio < (originalHeight / width) ? width : originalHeight / imageRatio
-        const renderedImageHeight = imageRatio < (originalHeight / width) ? width * imageRatio : originalHeight
+        const renderedImageWidth = screenWidth
+        const renderedImageHeight = screenWidth * imageRatio
 
-        const renderedImageY = (originalHeight - renderedImageHeight) / 2.0
-        const renderedImageX = (width - renderedImageWidth) / 2.0
+        const widthRatio = actualWidth / renderedImageWidth
+        const heightRatio = actualHeight / renderedImageHeight
 
-        const renderImageObj = {
-            left: renderedImageX,
-            top: renderedImageY,
-            width: renderedImageWidth,
-            height: renderedImageHeight,
+        return {
+            originX: this.currentPos.left * widthRatio,
+            originY: this.currentPos.top * heightRatio,
+            width: this.currentSize.width * widthRatio,
+            height: this.currentSize.height * heightRatio,
         }
-        const cropOverlayObj = {
-            left: this.currentPos.left,
-            top: this.currentPos.top,
-            width: this.currentSize.width,
-            height: this.currentSize.height,
-        }
-
-        let intersectAreaObj = {}
-
-        const x = Math.max(renderImageObj.left, cropOverlayObj.left)
-        const num1 = Math.min(renderImageObj.left + renderImageObj.width, cropOverlayObj.left + cropOverlayObj.width)
-        const y = Math.max(renderImageObj.top, cropOverlayObj.top)
-        const num2 = Math.min(renderImageObj.top + renderImageObj.height, cropOverlayObj.top + cropOverlayObj.height)
-        if (num1 >= x && num2 >= y) {
-            intersectAreaObj = {
-                originX: (x - renderedImageX) * (actualWidth / renderedImageWidth),
-                originY: (y - renderedImageY) * (actualWidth / renderedImageWidth),
-                width: (num1 - x) * (actualWidth / renderedImageWidth),
-                height: (num2 - y) * (actualWidth / renderedImageWidth),
-            }
-        } else {
-            intersectAreaObj = {
-                originX: x - renderedImageX,
-                originY: y - renderedImageY,
-                width: 0,
-                height: 0,
-            }
-        }
-        return intersectAreaObj
     }
 
     filp = async (uri, orientation) => {
@@ -278,7 +246,7 @@ class ExpoImageManipulator extends Component {
 
     zoomImage() {
         // this.refs.imageScrollView.zoomScale = 5
-        // this.setState({width: width})
+        // this.setState({width: screenWidth})
         // this.setState({zoomScale: 5})
 
         // this.setState(curHeight)
@@ -303,12 +271,12 @@ class ExpoImageManipulator extends Component {
         } = this.state
 
         const imageRatio = this.actualSize.height / this.actualSize.width
-        const originalHeight = Dimensions.get('window').height - this.state.safeAreaHeight
+        const screenHeight = Dimensions.get('window').height - this.state.safeAreaHeight
 
-        const screenRatio = originalHeight / width
+        const screenRatio = screenHeight / screenWidth
 
-        let cropWidth = imageRatio < screenRatio ? width : originalHeight / imageRatio
-        let cropHeight = imageRatio < screenRatio ? width * imageRatio : originalHeight
+        let cropWidth = screenWidth
+        let cropHeight = imageRatio < screenRatio ? screenWidth * imageRatio : screenHeight - 200
 
         let cropMinWidth = 60
         let cropMinHeight = 60
@@ -328,8 +296,8 @@ class ExpoImageManipulator extends Component {
             }
         }
 
-        const cropInitialTop = (originalHeight - cropHeight) / 2.0
-        const cropInitialLeft = (width - cropWidth) / 2.0
+        const cropInitialTop = (Math.min(this.state.imageLayout.height, screenHeight) - cropHeight) / 2.0
+        const cropInitialLeft = (screenWidth - cropWidth) / 2.0
 
 
         if (this.currentSize.width === 0 && cropMode) {
@@ -351,7 +319,7 @@ class ExpoImageManipulator extends Component {
             >
                 <SafeAreaView
                     style={{
-                        width, flexDirection: 'row', backgroundColor: 'black', justifyContent: 'space-between',
+                        width: screenWidth, flexDirection: 'row', backgroundColor: 'black', justifyContent: 'space-between',
                     }}
                     onLayout={e => this.setState({safeAreaHeight: e.nativeEvent.layout.height})}
                 >
@@ -453,33 +421,26 @@ class ExpoImageManipulator extends Component {
                 <View style={{ flex: 1, backgroundColor: 'black', width: Dimensions.get('window').width }}>
                     <ScrollView
                         style={{ position: 'relative', flex: 1 }}
-                        contentContainerStyle={{ backgroundColor: 'black', flex: 1, justifyContent: 'center' }}
-                        maximumZoomScale={5}
-                        minimumZoomScale={0.5}
-                        onScroll={this.onHandleScroll}
+                        contentContainerStyle={{ backgroundColor: 'black', justifyContent: 'center' }}
                         bounces={false}
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}
-                        ref={(c) => { this.scrollView = c }}
-                        scrollEventThrottle={16}
-                        scrollEnabled={false}
-                        pinchGestureEnabled={false}
-                        // scrollEnabled={cropMode ? false : true}
-                        // pinchGestureEnabled={cropMode ? false : pinchGestureEnabled}
+                        scrollEnabled={this.state.enableScroll}
+                        onScrollEndDrag={e => this.setState({scrollOffset: e.nativeEvent.contentOffset.y})}
                     >
                         <AutoHeightImage
                             source={{ uri }}
-                            resizeMode={imageRatio >= 1 ? 'contain' : 'contain'}
-                            width={width}
+                            resizeMode={'contain'}
+                            width={screenWidth}
                             onLayout={e => this.setState({imageLayout: e.nativeEvent.layout})}
                         />
                         {!!cropMode && (
                             <ImageCropOverlay
+                                onStartLayoutChange={() => this.setState({enableScroll: false})}
                                 onLayoutChanged={(top, left, w, height) => {
                                     this.currentSize.width = w
                                     this.currentSize.height = height
                                     this.currentPos.top = top
                                     this.currentPos.left = left
+                                    this.setState({enableScroll: true})
                                 }}
                                 initialWidth={(fixedMask && fixedMask.width) || cropWidth}
                                 initialHeight={(fixedMask && fixedMask.height) || cropHeight}
@@ -491,6 +452,7 @@ class ExpoImageManipulator extends Component {
                                 ratio={ratio || {ratio: {height: null, width: null, }}}
                                 safeAreaHeight={this.state.safeAreaHeight}
                                 imageLayout={this.state.imageLayout}
+                                scrollOffset={this.state.scrollOffset}
                             />
                         )
                         }

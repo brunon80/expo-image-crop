@@ -240,7 +240,7 @@ class ImageCropOverlay extends React.Component {
         } = this.state
 
         const xPercent = (x - initialLeft) / (initialWidth)
-        const yPercent = (y - initialTop - this.props.safeAreaHeight) / (initialHeight)
+        const yPercent = (y - initialTop - this.props.safeAreaHeight + this.props.scrollOffset) / (initialHeight)
 
         const xKey =  xPercent <= 0.33 ? 'l'
                     : xPercent >  0.66 ? 'r'
@@ -259,6 +259,8 @@ class ImageCropOverlay extends React.Component {
     // We were granted responder status! Let's update the UI
     handlePanResponderGrant = (event) => {
         // console.log(event.nativeEvent.locationX + ', ' + event.nativeEvent.locationY)
+
+        this.props.onStartLayoutChange()
 
         const selectedItem = this.getTappedItem(event.nativeEvent.pageX, event.nativeEvent.pageY)
         if (selectedItem == 'tl') {
