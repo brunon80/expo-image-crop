@@ -1,7 +1,7 @@
 import React from 'react';
 import type { SaveOptions } from 'expo-image-manipulator';
 
-type ImageManipulatorProps = {
+type ExpoImageManipulatorProps = {
   borderColor?: string;
   isVisible: boolean;
   onPictureChoosed?: ({uri: string, base64: boolean}) => void;
@@ -21,14 +21,6 @@ type ImageManipulatorProps = {
   allowRotate?: boolean;
 }
 
-type ImageManipulatorState = {
-  uri: string;
-  base64: boolean;
-  cropMode: boolean;
-  processing: boolean;
-  zoomScale: number;
-}
+class ExpoImageManipulator extends React.Component<ExpoImageManipulatorProps, any>{}
 
-export class ImageManipulator extends React.Component<ImageManipulatorProps, ImageManipulatorState>{
-  isRemote: boolean;
-}
+export default ExpoImageManipulator

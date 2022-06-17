@@ -1,5 +1,3 @@
 import ExpoImageManipulator from './manipulator/ExpoImageManipulator'
 
-export {
-    ExpoImageManipulator,
-}
+export default ExpoImageManipulator
