@@ -15,7 +15,7 @@ import * as FileSystem from 'expo-file-system'
 import PropTypes from 'prop-types'
 import AutoHeightImage from 'react-native-auto-height-image'
 import ImageCropOverlay from './ImageCropOverlay'
-import { MaterialIcons as MaterialIcon, MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -29,6 +29,7 @@ LogBox.ignoreLogs([
 class ExpoImageManipulator extends Component {
     constructor(props) {
         super(props)
+
         this.state = {
             cropMode: false,
             processing: false,
@@ -252,6 +253,14 @@ class ExpoImageManipulator extends Component {
         // this.setState(curHeight)
     }
 
+    getIconFromProps(name, defaultNode){
+        if(this.props.icons && this.props.icons[name]){
+            return this.props.icons[name]
+        }
+
+        return defaultNode
+    }
+
     render() {
         const {
             isVisible,
@@ -331,13 +340,15 @@ class ExpoImageManipulator extends Component {
                     >
                         {!cropMode
                             ? (
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <TouchableOpacity onPress={() => this.onToggleModal()}
                                         style={{
                                             width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                                         }}
                                     >
-                                        <Icon size={24} name="arrow-left" color="white" />
+                                        {this.getIconFromProps('back', (
+                                            <MaterialIcons size={24} name="arrow-back-ios" color="white" />
+                                        ))}
                                     </TouchableOpacity>
                                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
                                         <TouchableOpacity onPress={() => this.setState({ cropMode: true })}
@@ -345,7 +356,7 @@ class ExpoImageManipulator extends Component {
                                                 marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                                             }}
                                         >
-                                            <Icon size={20} name="crop" color="white" />
+                                            <MaterialCommunityIcons size={20} name="crop" color="white" />
                                         </TouchableOpacity>
                                         {
                                             allowRotate
@@ -357,14 +368,14 @@ class ExpoImageManipulator extends Component {
                                                             marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                                                         }}
                                                     >
-                                                        <Icon size={20} name="rotate-left" color="white" />
+                                                        <MaterialCommunityIcons size={20} name="rotate-left" color="white" />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => this.onFlipImage('vertical')}
                                                         style={{
                                                             marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                                                         }}
                                                     >
-                                                        <MaterialIcon style={{ transform: [{ rotate: '270deg' }] }} size={20} name="flip" color="white" />
+                                                        <MaterialIcons style={{ transform: [{ rotate: '270deg' }] }} size={20} name="flip" color="white" />
                                                     </TouchableOpacity>
                                                 </View>
                                             )
@@ -379,7 +390,7 @@ class ExpoImageManipulator extends Component {
                                                             marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                                                         }}
                                                     >
-                                                        <MaterialIcon size={20} name="flip" color="white" />
+                                                        <MaterialIcons size={20} name="flip" color="white" />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => { onPictureChoosed({ uri, base64 }); this.onToggleModal() }}
                                                         style={{
@@ -395,21 +406,31 @@ class ExpoImageManipulator extends Component {
                                 </View>
                             )
                             : (
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <TouchableOpacity onPress={() => this.setState({ cropMode: false })}
                                         style={{
                                             width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                                         }}
                                     >
-                                        <Icon size={24} name="arrow-left" color="white" />
+                                        {this.getIconFromProps('back', (
+                                            <MaterialIcons size={24} name="arrow-back-ios" color="white" />
+                                        ))}
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => this.onCropImage()}
                                         style={{
                                             marginRight: 10, alignItems: 'flex-end', flex: 1,
                                         }}
                                     >
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <MaterialIcon style={{ flexDirection: 'row', marginRight: 10 }} size={24} name={!processing ? 'done' : 'access-time'} color="white" />
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            {processing ?
+                                                this.getIconFromProps('processing', (
+                                                    <MaterialIcons style={{ marginRight: 5 }} size={20} name={'access-time'} color="white" />
+                                                ))
+                                                :
+                                                this.getIconFromProps('crop', (
+                                                    <FontAwesome style={{ marginRight: 5 }} size={20} name={'scissors'} color="white" />
+                                                ))
+                                            }
                                             <Text style={{ fontWeight: '500', color: 'white', fontSize: 18 }}>{!processing ? btnTexts.crop : btnTexts.processing}</Text>
                                         </View>
                                     </TouchableOpacity>
@@ -492,4 +513,5 @@ ExpoImageManipulator.propTypes = {
     photo: PropTypes.object.isRequired,
     onToggleModal: PropTypes.func.isRequired,
     ratio: PropTypes.object,
+    icons: PropTypes.object
 }

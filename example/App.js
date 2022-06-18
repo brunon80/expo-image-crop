@@ -111,9 +111,9 @@ export default class App extends React.Component {
                             base64: true,
                         }}
                         btnTexts={{
-                            done: 'Ok',
-                            crop: 'Cortar',
-                            processing: 'Processando',
+                            done: '決定',
+                            crop: '切り抜く',
+                            processing: '処理中',
                         }}
                         ratio={{width: 16, height: 9}}
                     />

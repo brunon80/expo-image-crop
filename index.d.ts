@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import type { SaveOptions } from 'expo-image-manipulator';
 
 type ExpoImageManipulatorProps = {
@@ -6,15 +6,20 @@ type ExpoImageManipulatorProps = {
   isVisible: boolean;
   onPictureChoosed?: ({uri: string, base64: boolean}) => void;
   btnTexts?: {
-    crop: string,
-    rotate: string,
-    done: string,
-    processing: string,
+    crop?: string,
+    rotate?: string,
+    done?: string,
+    processing?: string,
+  };
+  icons?: {
+    back?: ReactNode,
+    crop?: ReactNode,
+    processing?: ReactNode
   };
   saveOptions?: SaveOptions;
   photo: {
     uri: string;
-  },
+  };
   onToggleModal: () => void;
   ratio?: {width: number, height: number};
   allowFlip?: boolean;
