@@ -4,6 +4,9 @@
   "description": "Crop, rotate and flip images without detach your expo project!",
   "main": "index.js",
   "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "expo-file-system": "~13.1.4",
@@ -13,7 +16,10 @@
     "react-native-auto-height-image": "^1.0.5"
   },
   "devDependencies": {
-    "react": "17.0.1"
+    "@types/node": "^18.0.0",
+    "@types/react": "^17.0.41",
+    "@types/react-native": "^0.66.15",
+    "typescript": "~4.3.5"
   },
   "peerDependencies": {
     "expo": "^44.0.0",

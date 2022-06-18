@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "jsx": "react",
+    "target": "ES2015",
+    "lib": [
+      "es6"
+    ],
+    "outDir": "./dist"
+  },
+  "include": [
+    "./expo/libraries/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
