@@ -13,7 +13,7 @@
     "react-native-auto-height-image": "^1.0.5"
   },
   "devDependencies": {
-
+    "react": "17.0.1"
   },
   "peerDependencies": {
     "expo": "^44.0.0",

@@ -4,7 +4,7 @@ import type { SaveOptions } from 'expo-image-manipulator';
 type ExpoImageManipulatorProps = {
   borderColor?: string;
   isVisible: boolean;
-  onPictureChoosed?: ({uri: string, base64: boolean}) => void;
+  onPictureChoosed?: ({ uri: string, base64: boolean }) => void;
   btnTexts?: {
     crop?: string,
     rotate?: string,
@@ -14,18 +14,18 @@ type ExpoImageManipulatorProps = {
   icons?: {
     back?: ReactNode,
     crop?: ReactNode,
-    processing?: ReactNode
+    processing?: ReactNode;
   };
   saveOptions?: SaveOptions;
   photo: {
     uri: string;
   };
   onToggleModal: () => void;
-  ratio?: {width: number, height: number};
+  ratio?: { width: number, height: number; };
   allowFlip?: boolean;
   allowRotate?: boolean;
-}
+};
 
-class ExpoImageManipulator extends React.Component<ExpoImageManipulatorProps, any>{}
+declare class ExpoImageManipulator extends React.Component<ExpoImageManipulatorProps, any>{ }
 
-export default ExpoImageManipulator
+export default ExpoImageManipulator;
