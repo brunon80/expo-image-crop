@@ -6,8 +6,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import ExpoImageManipulator from './libraries/ExpoImageManipulator';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
-
 import HybridTouch from './HybridTouch';
+import { SaveFormat } from 'expo-image-manipulator';
 
 const noImage = require('./assets/no_image.png');
 
@@ -107,7 +107,7 @@ export default class App extends React.Component {
               onToggleModal={this.onToggleModal}
               saveOptions={{
                 compress: 1,
-                format: 'png',
+                format: SaveFormat.PNG,
                 base64: true,
               }}
               btnTexts={{
