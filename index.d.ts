@@ -4,7 +4,7 @@ import type { SaveOptions } from 'expo-image-manipulator';
 type ExpoImageManipulatorProps = {
   borderColor?: string;
   isVisible: boolean;
-  onPictureChoosed?: ({ uri: string, base64: boolean }) => void;
+  onPictureChoosed?: (props: { uri: string, base64: boolean; }) => void;
   btnTexts?: {
     crop?: string,
     rotate?: string,
