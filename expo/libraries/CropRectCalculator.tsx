@@ -14,7 +14,6 @@ class CropRectCalculator {
   };
 
   constructor(cropRect: Rect, ratio: number | undefined, minWidth: number, minHeight: number, imageRect: Rect) {
-    console.log('CropRectCalculator.constructor', imageRect);
     this.cropRect = cropRect;
     this.ratio = ratio;
     this.minHeight = minHeight;
