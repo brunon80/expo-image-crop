@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
-import ExpoImageManipulator from '../manipulator/ExpoImageManipulator';
+import ExpoImageManipulator from './libraries/ExpoImageManipulator';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 
 import HybridTouch from './HybridTouch';

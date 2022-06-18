@@ -1,3 +1,3 @@
-import ExpoImageManipulator from './manipulator/ExpoImageManipulator'
+import ExpoImageManipulator from './libraries/ExpoImageManipulator';
 
-export default ExpoImageManipulator
+export default ExpoImageManipulator;
