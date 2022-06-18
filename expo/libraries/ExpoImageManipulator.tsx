@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
-import PropTypes from 'prop-types';
 import AutoHeightImage from 'react-native-auto-height-image';
 import ImageCropOverlay from './ImageCropOverlay';
 import { MaterialIcons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
@@ -400,6 +399,7 @@ class ExpoImageManipulator extends Component<Props, State> {
       this.currentPos.top = cropInitialTop;
       this.currentPos.left = cropInitialLeft;
     }
+
     return (
       <Modal
         animationType="slide"
@@ -541,14 +541,17 @@ class ExpoImageManipulator extends Component<Props, State> {
                 source={{ uri }}
                 resizeMode={'contain'}
                 width={screenWidth}
-                onLayout={e => this.setState({ imageLayout: e.nativeEvent.layout })}
+                onLayout={e => {
+                  console.log('onlayout', e.nativeEvent.layout);
+                  this.setState({ imageLayout: e.nativeEvent.layout });
+                }}
               />
             }
             {!!cropMode && (
               <ImageCropOverlay
                 onStartLayoutChange={() => this.setState({ enableScroll: false })}
-                onLayoutChanged={(top, left, w, height) => {
-                  this.currentSize.width = w;
+                onLayoutChanged={(top, left, width, height) => {
+                  this.currentSize.width = width;
                   this.currentSize.height = height;
                   this.currentPos.top = top;
                   this.currentPos.left = left;
@@ -561,7 +564,7 @@ class ExpoImageManipulator extends Component<Props, State> {
                 minWidth={(fixedMask && fixedMask.width) || cropMinWidth}
                 minHeight={(fixedMask && fixedMask.height) || cropMinHeight}
                 borderColor={borderColor}
-                ratio={ratio || { ratio: { height: null, width: null, } }}
+                ratio={ratio || undefined}
                 safeAreaHeight={this.state.safeAreaHeight}
                 imageLayout={this.state.imageLayout}
                 scrollOffsetY={this.state.scrollOffsetY}
