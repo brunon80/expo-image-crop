@@ -1,4 +1,4 @@
-<h1 align="center">Expo image manipulator</h1>
+<h1 align="center">Expo image manipulator UI</h1>
 <p align="center">Multi platform 🚀</p>
 
 <p align="center">
@@ -7,41 +7,33 @@
    <br/>
    <br/>
    <br/>
-   <a href="https://github.com/brunon80/expo-image-crop"><img alt="npm version" src="https://badge.fury.io/js/expo-image-crop.svg"/>
-   <a href="https://github.com/brunon80/expo-image-crop"><img alt="npm version" src="https://img.shields.io/badge/platform-ios%2Fandroid-blue.svg"/>
-   <a href="https://github.com/brunon80/expo-image-crop"><img alt="npm version" src="https://img.shields.io/badge/license-MIT-lightgrey.svg"/>
-   <p align="center">
-   
-  <a href="https://exp.host/@koruja/expo-image-crop">Open on your device!</a>
-</p>
+   <a href="https://github.com/gomo/expo-image-crop"><img alt="npm version" src="https://badge.fury.io/js/expo-image-crop.svg"/>
+   <a href="https://github.com/gomo/expo-image-crop"><img alt="npm version" src="https://img.shields.io/badge/platform-ios%2Fandroid-blue.svg"/>
+   <a href="https://github.com/gomo/expo-image-crop"><img alt="npm version" src="https://img.shields.io/badge/license-MIT-lightgrey.svg"/>
 </a>
 </p>
 
 ## Crop and rotate image without detach your expo project!
 ## `Expo.ImageManipulator` is only a API without a UI, so you have to build your own UI on top of it, or choose detach your project to use third party linked packages, witch is no so good because a pure javascript Expo project is marvelous!
 
-[PRs are welcome...](https://github.com/brunon80/expo-image-crop/pulls)
+[PRs are welcome...](https://github.com/gomo/expo-image-crop/pulls)
 
 >No more flickering while resizing image mask!
 
->Compatible with Expo SDK 36
+>Compatible with Expo SDK 44
 
-> Atention: *squareAspect* was removed on this version and will be add in future versions, if you need it, please stay at 0.2.17
+>Support typescript
 
 
-### Expo Dependences
-- yarn add react-native-vector-icons
-- expo install expo-image-picker
-- expo install expo-camera
-- expo install expo-file-system
-- expo install expo-image-manipulator
+### Install
+`yarn add expo-image-manipulator-ui`
 
 ## Example
 
 ```javascript
 import React from 'react'
 import { Dimensions, Button, ImageBackground } from 'react-native'
-import { ImageManipulator } from 'expo-image-crop'
+import { ExpoImageManipulatorUI } from 'expo-image-manipulator-ui'
 
 export default class App extends React.Component {
   state = {
@@ -64,7 +56,7 @@ export default class App extends React.Component {
               source={{ uri }}
           >
               <Button title="Open Image Editor" onPress={() => this.setState({ isVisible: true })} />
-              <ImageManipulator
+              <ExpoImageManipulatorUI
                   photo={{ uri }}
                   isVisible={isVisible}
                   onPictureChoosed={({ uri: uriM }) => this.setState({ uri: uriM })}
@@ -89,6 +81,8 @@ export default class App extends React.Component {
 | allowFlip        | boolean  | true                                                                       | Show flip option                                   |
 | saveOptions      | object   | ```{ "compress": number, "format": string, "base64": boolean}``` | A map defining how modified image should be saved  
 | fixedMask      | object   | ```{ "width": number, "height": number }``` | Width and height fixed mask
+| ratio      | object   | ```{ "width": number, "height": number }``` | Width and height cropping ratio
+| icons      | object   | ```{ "crop": ReactNode, "back": ReactNode, "processing": ReactNode }``` | Some icons can be changed
 
 
 ## Return of onPictureChoosed is an object with format:
@@ -101,7 +95,7 @@ export default class App extends React.Component {
 ```
 ## Run the example!
 - Clone this repository
-- cd example/
+- cd source/
 - run yarn or npm install
 - enjoy!
 ### The animation is fluid even on dev mode!
