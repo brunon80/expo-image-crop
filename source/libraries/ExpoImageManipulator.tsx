@@ -53,7 +53,7 @@ type Props = {
     done?: string,
     processing?: string,
   };
-  icons?: {
+  icons: {
     back?: ReactNode,
     crop?: ReactNode,
     processing?: ReactNode;
@@ -77,6 +77,11 @@ class ExpoImageManipulator extends Component<Props, State> {
       rotate: 'Rotate',
       done: 'Done',
       processing: 'Processing',
+    },
+    icons: {
+      back: <MaterialIcons size={24} name="arrow-back-ios" color="white" />,
+      crop: <FontAwesome style={{ marginRight: 5 }} size={20} name={'scissors'} color="white" />,
+      processing: <MaterialIcons style={{ marginRight: 5 }} size={20} name={'access-time'} color="white" />
     },
     saveOptions: {
       compress: 1,
@@ -336,14 +341,6 @@ class ExpoImageManipulator extends Component<Props, State> {
     // this.setState(curHeight)
   }
 
-  getIconFromProps(name: keyof NonNullable<Props['icons']>, defaultNode: ReactNode): ReactNode {
-    if (this.props.icons && this.props.icons[name]) {
-      return this.props.icons[name];
-    }
-
-    return defaultNode;
-  }
-
   render() {
     const {
       isVisible,
@@ -430,9 +427,7 @@ class ExpoImageManipulator extends Component<Props, State> {
                       width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                     }}
                   >
-                    {this.getIconFromProps('back', (
-                      <MaterialIcons size={24} name="arrow-back-ios" color="white" />
-                    ))}
+                    {this.props.icons.back}
                   </TouchableOpacity>
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
                     <TouchableOpacity onPress={() => this.setState({ cropMode: true })}
@@ -501,9 +496,7 @@ class ExpoImageManipulator extends Component<Props, State> {
                       width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
                     }}
                   >
-                    {this.getIconFromProps('back', (
-                      <MaterialIcons size={24} name="arrow-back-ios" color="white" />
-                    ))}
+                    {this.props.icons.back}
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => this.onCropImage()}
                     style={{
@@ -512,13 +505,9 @@ class ExpoImageManipulator extends Component<Props, State> {
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       {processing ?
-                        this.getIconFromProps('processing', (
-                          <MaterialIcons style={{ marginRight: 5 }} size={20} name={'access-time'} color="white" />
-                        ))
+                        this.props.icons.processing
                         :
-                        this.getIconFromProps('crop', (
-                          <FontAwesome style={{ marginRight: 5 }} size={20} name={'scissors'} color="white" />
-                        ))
+                        this.props.icons.crop
                       }
                       <Text style={{ fontWeight: '500', color: 'white', fontSize: 18 }}>{!processing ? btnTexts.crop : btnTexts.processing}</Text>
                     </View>
