@@ -541,10 +541,7 @@ class ExpoImageManipulator extends Component<Props, State> {
                 source={{ uri }}
                 resizeMode={'contain'}
                 width={screenWidth}
-                onLayout={e => {
-                  console.log('onlayout', e.nativeEvent.layout);
-                  this.setState({ imageLayout: e.nativeEvent.layout });
-                }}
+                onLayout={e => this.setState({ imageLayout: e.nativeEvent.layout })}
               />
             }
             {!!cropMode && (

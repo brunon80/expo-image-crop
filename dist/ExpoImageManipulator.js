@@ -315,10 +315,7 @@ class ExpoImageManipulator extends Component {
             React.createElement(View, { style: { flex: 1, backgroundColor: 'black', width: Dimensions.get('window').width } },
                 React.createElement(ScrollView, { style: { position: 'relative', flex: 1 }, contentContainerStyle: { backgroundColor: 'black', justifyContent: 'center' }, bounces: false, scrollEnabled: this.state.enableScroll, onScrollEndDrag: e => this.setState({ scrollOffsetY: e.nativeEvent.contentOffset.y }) },
                     uri &&
-                        React.createElement(AutoHeightImage, { source: { uri }, resizeMode: 'contain', width: screenWidth, onLayout: e => {
-                                console.log('onlayout', e.nativeEvent.layout);
-                                this.setState({ imageLayout: e.nativeEvent.layout });
-                            } }),
+                        React.createElement(AutoHeightImage, { source: { uri }, resizeMode: 'contain', width: screenWidth, onLayout: e => this.setState({ imageLayout: e.nativeEvent.layout }) }),
                     !!cropMode && (React.createElement(ImageCropOverlay, { onStartLayoutChange: () => this.setState({ enableScroll: false }), onLayoutChanged: (top, left, width, height) => {
                             this.currentSize.width = width;
                             this.currentSize.height = height;
