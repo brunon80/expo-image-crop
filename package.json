@@ -34,13 +34,18 @@
     "image",
     "rotate"
   ],
+  "files": [
+    "index.d.ts",
+    "source/libraries",
+    "dist"
+  ],
   "license": "MIT",
-  "homepage": "https://github.com/brunon80/expo-image-crop",
+  "homepage": "https://github.com/gomo/expo-image-crop",
   "bugs": {
-    "url": "https://github.com/brunon80/expo-image-crop/issues"
+    "url": "https://github.com/gomo/expo-image-crop/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/brunon80/expo-image-crop"
+    "url": "https://github.com/gomo/expo-image-crop"
   }
 }
