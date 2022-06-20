@@ -2,7 +2,7 @@
 
 ## Note
 
-This repository was forked from `brunon80/expo-image-crop`, which is probably no longer maintained.
+This repository was forked from [brunon80/expo-image-crop](https://github.com/brunon80/expo-image-crop), which is probably no longer maintained.
 The changes (at 2022/06/20) are as follows:
 
 * Up supported Expo sdk to 44.
