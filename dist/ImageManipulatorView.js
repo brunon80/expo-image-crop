@@ -21,7 +21,7 @@ LogBox.ignoreLogs([
     'Warning: componentWillReceiveProps is deprecated',
     'Module RCTImageLoader requires',
 ]);
-class ExpoImageManipulator extends Component {
+class ImageManipulatorView extends Component {
     constructor(props) {
         super(props);
         this.onGetCorrectSizes = (w, h) => {
@@ -217,12 +217,6 @@ class ExpoImageManipulator extends Component {
         // this.setState({zoomScale: 5})
         // this.setState(curHeight)
     }
-    getIconFromProps(name, defaultNode) {
-        if (this.props.icons && this.props.icons[name]) {
-            return this.props.icons[name];
-        }
-        return defaultNode;
-    }
     render() {
         const { isVisible, onPictureChoosed, borderColor, allowRotate = true, allowFlip = true, btnTexts, fixedMask, ratio, } = this.props;
         const { uri, base64, cropMode, processing, } = this.state;
@@ -268,7 +262,7 @@ class ExpoImageManipulator extends Component {
                     ? (React.createElement(View, { style: { flexDirection: 'row', alignItems: 'center' } },
                         React.createElement(TouchableOpacity, { onPress: () => this.onToggleModal(), style: {
                                 width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
-                            } }, this.getIconFromProps('back', (React.createElement(MaterialIcons, { size: 24, name: "arrow-back-ios", color: "white" })))),
+                            } }, this.props.icons.back),
                         React.createElement(View, { style: { flex: 1, flexDirection: 'row', justifyContent: 'flex-end' } },
                             React.createElement(TouchableOpacity, { onPress: () => this.setState({ cropMode: true }), style: {
                                     marginLeft: 10, width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
@@ -302,15 +296,15 @@ class ExpoImageManipulator extends Component {
                     : (React.createElement(View, { style: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' } },
                         React.createElement(TouchableOpacity, { onPress: () => this.setState({ cropMode: false }), style: {
                                 width: 32, height: 32, alignItems: 'center', justifyContent: 'center',
-                            } }, this.getIconFromProps('back', (React.createElement(MaterialIcons, { size: 24, name: "arrow-back-ios", color: "white" })))),
+                            } }, this.props.icons.back),
                         React.createElement(TouchableOpacity, { onPress: () => this.onCropImage(), style: {
                                 marginRight: 10, alignItems: 'flex-end', flex: 1,
                             } },
                             React.createElement(View, { style: { flexDirection: 'row', alignItems: 'center' } },
                                 processing ?
-                                    this.getIconFromProps('processing', (React.createElement(MaterialIcons, { style: { marginRight: 5 }, size: 20, name: 'access-time', color: "white" })))
+                                    this.props.icons.processing
                                     :
-                                        this.getIconFromProps('crop', (React.createElement(FontAwesome, { style: { marginRight: 5 }, size: 20, name: 'scissors', color: "white" }))),
+                                        this.props.icons.crop,
                                 React.createElement(Text, { style: { fontWeight: '500', color: 'white', fontSize: 18 } }, !processing ? btnTexts.crop : btnTexts.processing))))))),
             React.createElement(View, { style: { flex: 1, backgroundColor: 'black', width: Dimensions.get('window').width } },
                 React.createElement(ScrollView, { style: { position: 'relative', flex: 1 }, contentContainerStyle: { backgroundColor: 'black', justifyContent: 'center' }, bounces: false, scrollEnabled: this.state.enableScroll, onScrollEndDrag: e => this.setState({ scrollOffsetY: e.nativeEvent.contentOffset.y }) },
@@ -325,13 +319,18 @@ class ExpoImageManipulator extends Component {
                         }, initialWidth: (fixedMask && fixedMask.width) || cropWidth, initialHeight: (fixedMask && fixedMask.height) || cropHeight, initialTop: cropInitialTop, initialLeft: cropInitialLeft, minWidth: (fixedMask && fixedMask.width) || cropMinWidth, minHeight: (fixedMask && fixedMask.height) || cropMinHeight, borderColor: borderColor, ratio: ratio || undefined, safeAreaHeight: this.state.safeAreaHeight, imageLayout: this.state.imageLayout, scrollOffsetY: this.state.scrollOffsetY }))))));
     }
 }
-ExpoImageManipulator.defaultProps = {
+ImageManipulatorView.defaultProps = {
     borderColor: '#a4a4a4',
     btnTexts: {
         crop: 'Crop',
         rotate: 'Rotate',
         done: 'Done',
         processing: 'Processing',
+    },
+    icons: {
+        back: React.createElement(MaterialIcons, { size: 24, name: "arrow-back-ios", color: "white" }),
+        crop: React.createElement(FontAwesome, { style: { marginRight: 5 }, size: 20, name: 'scissors', color: "white" }),
+        processing: React.createElement(MaterialIcons, { style: { marginRight: 5 }, size: 20, name: 'access-time', color: "white" })
     },
     saveOptions: {
         compress: 1,
@@ -340,4 +339,4 @@ ExpoImageManipulator.defaultProps = {
     },
     fixedMask: undefined,
 };
-export default ExpoImageManipulator;
+export default ImageManipulatorView;

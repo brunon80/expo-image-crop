@@ -1,4 +1,4 @@
-<h1 align="center">Expo image manipulator UI</h1>
+<h1 align="center">Expo image manipulator view</h1>
 <p align="center">Multi platform 🚀</p>
 
 <p align="center">
@@ -33,7 +33,7 @@
 ```javascript
 import React from 'react'
 import { Dimensions, Button, ImageBackground } from 'react-native'
-import { ExpoImageManipulatorUI } from 'expo-image-manipulator-ui'
+import { ImageManipulatorView } from 'expo-image-manipulator-view'
 
 export default class App extends React.Component {
   state = {
@@ -56,7 +56,7 @@ export default class App extends React.Component {
               source={{ uri }}
           >
               <Button title="Open Image Editor" onPress={() => this.setState({ isVisible: true })} />
-              <ExpoImageManipulatorUI
+              <ImageManipulatorView
                   photo={{ uri }}
                   isVisible={isVisible}
                   onPictureChoosed={({ uri: uriM }) => this.setState({ uri: uriM })}

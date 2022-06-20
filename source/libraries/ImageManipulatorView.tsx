@@ -69,7 +69,7 @@ type Props = {
   fixedMask?: Size;
 };
 
-class ExpoImageManipulator extends Component<Props, State> {
+class ImageManipulatorView extends Component<Props, State> {
   static defaultProps = {
     borderColor: '#a4a4a4',
     btnTexts: {
@@ -99,7 +99,7 @@ class ExpoImageManipulator extends Component<Props, State> {
   maxSizes: Size;
   actualSize: Size;
 
-  constructor(props: Omit<Props, 'borderColor' | 'btnTexts'> & typeof ExpoImageManipulator.defaultProps) {
+  constructor(props: Omit<Props, 'borderColor' | 'btnTexts'> & typeof ImageManipulatorView.defaultProps) {
     super(props);
 
     this.state = {
@@ -564,4 +564,4 @@ class ExpoImageManipulator extends Component<Props, State> {
   }
 }
 
-export default ExpoImageManipulator;
+export default ImageManipulatorView;

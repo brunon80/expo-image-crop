@@ -229,12 +229,7 @@ class CropRectCalculator {
         }
     }
     toObject() {
-        return {
-            top: this.cropRect.top,
-            left: this.cropRect.left,
-            width: this.cropRect.width,
-            height: this.cropRect.height
-        };
+        return this.cropRect.toObject();
     }
 }
 export default CropRectCalculator;
