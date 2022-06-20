@@ -18,6 +18,15 @@ class Rect {
   get bottom() {
     return this.top + this.height;
   }
+
+  toObject() {
+    return {
+      top: this.top,
+      left: this.left,
+      width: this.width,
+      height: this.height
+    };
+  }
 }
 
 export default Rect;

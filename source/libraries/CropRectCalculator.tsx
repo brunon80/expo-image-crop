@@ -68,7 +68,7 @@ class CropRectCalculator {
     }
   }
 
-  _resizeWidthFromCenter(amount: number) {
+  private _resizeWidthFromCenter(amount: number) {
     this.cropRect.left -= amount / 2;
     this.cropRect.width += amount;
 
@@ -79,7 +79,7 @@ class CropRectCalculator {
     }
   }
 
-  _resizeHeightFromCenter(amount: number) {
+  private _resizeHeightFromCenter(amount: number) {
     this.cropRect.top -= amount / 2;
     this.cropRect.height += amount;
 
@@ -90,7 +90,7 @@ class CropRectCalculator {
     }
   }
 
-  _moveRight(amount: number) {
+  private _moveRight(amount: number) {
     const newWidth = this.cropRect.width + amount;
     if (newWidth < this.minWidth) {
       this.cropRect.width = this.minWidth;
@@ -133,7 +133,7 @@ class CropRectCalculator {
     }
   }
 
-  _moveLeft(amount: number) {
+  private _moveLeft(amount: number) {
     if (this.fix.right) {
       const newWidth = this.cropRect.width - amount;
       if (newWidth < this.minWidth) {
@@ -180,7 +180,7 @@ class CropRectCalculator {
     }
   }
 
-  _moveTop(amount: number) {
+  private _moveTop(amount: number) {
     if (this.fix.bottom) {
       const newHeight = this.cropRect.height - amount;
       if (newHeight < this.minHeight) {
@@ -228,7 +228,7 @@ class CropRectCalculator {
     }
   }
 
-  _moveBottom(amount: number) {
+  private _moveBottom(amount: number) {
     const newHeight = this.cropRect.height + amount;
     if (newHeight < this.minHeight) {
       this.cropRect.height = this.minHeight;
@@ -274,12 +274,7 @@ class CropRectCalculator {
   }
 
   toObject() {
-    return {
-      top: this.cropRect.top,
-      left: this.cropRect.left,
-      width: this.cropRect.width,
-      height: this.cropRect.height
-    };
+    return this.cropRect.toObject();
   }
 }
 
