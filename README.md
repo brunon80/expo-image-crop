@@ -1,4 +1,20 @@
 <h1 align="center">Expo image manipulator view</h1>
+
+## Note
+
+This repository was forked from `brunon80/expo-image-crop`, which is probably no longer maintained.
+The changes (at 2022/06/20) are as follows:
+
+* Up supported Expo sdk to 44.
+* Support aspect.
+* Support images longer than the screen with scroll.
+* Several icons can be changed.
+* Remove unnecessary dependencies from package.json.
+* Reorganized directory structure.
+* Rewritten to typescript, and type information was provided.
+
+All changes can be found [here](https://github.com/gomo/expo-image-crop/pull/1/files).
+
 <p align="center">Multi platform 🚀</p>
 
 <p align="center">
@@ -24,21 +40,7 @@
 
 >Support typescript
 
-
-This repository was forked from `brunon80/expo-image-crop`, which is probably no longer maintained.
-The changes (at 2022/06/20) are as follows:
-
-* Up supported Expo sdk to 44.
-* Support aspect.
-* Support images longer than the screen with scroll.
-* Several icons can be changed.
-* Remove unnecessary dependencies from package.json.
-* Reorganized directory structure.
-* Rewritten to typescript, and type information was provided.
-
-All changes can be found [here](https://github.com/gomo/expo-image-crop/pull/1/files).
-
-### Install
+## Install
 `yarn add expo-image-manipulator-view`
 
 ## Example
