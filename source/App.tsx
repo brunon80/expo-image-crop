@@ -103,6 +103,15 @@ export default class App extends React.Component {
                 // console.log(data)
                 this.setState({ uri: data.uri });
               }}
+              onBeforePictureChoosed={(data) => {
+                const diff = Math.abs(data.width / data.height - 16 / 9) * 1000;
+                if (data.cropped || diff < 3) {
+                  return true;
+                }
+
+                alert('You must crop the image.');
+                return false;
+              }}
               // fixedMask={{ width: 200, height: 200 }}
               onToggleModal={this.onToggleModal}
               saveOptions={{

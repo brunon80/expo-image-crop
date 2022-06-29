@@ -43,10 +43,19 @@ type State = {
   base64: string | undefined;
 };
 
+type ChoosedPicture = {
+  uri: string,
+  base64: string | undefined,
+  width: number,
+  height: number,
+  cropped: boolean;
+};
+
 type Props = {
   borderColor?: string;
   isVisible: boolean;
-  onPictureChoosed: (props: { uri: string, base64: string | undefined; }) => void;
+  onPictureChoosed: (data: ChoosedPicture) => void;
+  onBeforePictureChoosed?: (data: ChoosedPicture) => boolean;
   btnTexts: {
     crop?: string,
     rotate?: string,
@@ -98,6 +107,7 @@ class ImageManipulatorView extends Component<Props, State> {
   currentSize: Size;
   maxSizes: Size;
   actualSize: Size;
+  cropped: boolean;
 
   constructor(props: Omit<Props, 'borderColor' | 'btnTexts'> & typeof ImageManipulatorView.defaultProps) {
     super(props);
@@ -133,6 +143,8 @@ class ImageManipulatorView extends Component<Props, State> {
       width: 0,
       height: 0,
     };
+
+    this.cropped = false;
   }
 
   async componentDidMount() {
@@ -186,12 +198,12 @@ class ImageManipulatorView extends Component<Props, State> {
   };
 
   onCropImage = () => {
-    this.setState({ processing: true });
     const { uri } = this.state;
     if (!uri) {
       return;
     }
 
+    this.setState({ processing: true });
     Image.getSize(uri, async (actualWidth, actualHeight) => {
       const cropObj = this.getCropBounds(actualWidth, actualHeight);
       if (cropObj.height > 0 && cropObj.width > 0) {
@@ -213,7 +225,7 @@ class ImageManipulatorView extends Component<Props, State> {
 
         this.setState({
           uri: uriCroped, base64, cropMode: false, processing: false,
-        });
+        }, () => this.cropped = true);
       } else {
         this.setState({ cropMode: false, processing: false });
       }
@@ -345,6 +357,7 @@ class ImageManipulatorView extends Component<Props, State> {
     const {
       isVisible,
       onPictureChoosed,
+      onBeforePictureChoosed,
       borderColor,
       allowRotate = true,
       allowFlip = true,
@@ -473,8 +486,25 @@ class ImageManipulatorView extends Component<Props, State> {
                           </TouchableOpacity>
                           <TouchableOpacity onPress={() => {
                             if (uri) {
-                              onPictureChoosed({ uri, base64 });
-                              this.onToggleModal();
+                              Image.getSize(uri, (width, height) => {
+                                let success = true;
+                                const data: ChoosedPicture = {
+                                  uri,
+                                  base64,
+                                  width,
+                                  height,
+                                  cropped: this.cropped
+                                };
+
+                                if (onBeforePictureChoosed) {
+                                  success = onBeforePictureChoosed(data);
+                                };
+
+                                if (success) {
+                                  onPictureChoosed(data);
+                                  this.onToggleModal();
+                                }
+                              });
                             }
                           }}
                             style={{
