@@ -282,10 +282,10 @@ class ImageManipulatorView extends Component<Props, State> {
     const heightRatio = actualHeight / renderedImageHeight;
 
     return {
-      originX: this.currentPos.left * widthRatio,
-      originY: this.currentPos.top * heightRatio,
-      width: this.currentSize.width * widthRatio,
-      height: this.currentSize.height * heightRatio,
+      originX: Math.round(this.currentPos.left * widthRatio),
+      originY: Math.round(this.currentPos.top * heightRatio),
+      width: Math.round(this.currentSize.width * widthRatio),
+      height: Math.round(this.currentSize.height * heightRatio),
     };
   };
 
