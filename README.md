@@ -87,10 +87,10 @@ export default class App extends React.Component {
 | Props            | Type     | Default                                                                    | Description                                        |
 |------------------|----------|----------------------------------------------------------------------------|----------------------------------------------------|
 | isVisible        | boolean  | false                                                                      | Show or hide modal with image manipulator UI       |
-| onBeforePictureChoosed | function | ```{  uri: string, base64: string \| undefined, width: number, height: number, cropped: boolean } ``` | Callback before done. You must return boolean. If you return false, it will stop. |
-| onPictureChoosed | function | ```{  uri: string, base64: string \| undefined, width: number, height: number, cropped: boolean } ``` | Callback where is passed image edited as parameter |
-| photo            | object   | ```{  uri: string } ```                                       | uri of image to be edited                          |
-| btnTexts         | object   | ```{ crop: string, done: string, processing: string}```    | name for crop, done and processing texts           |
+| onBeforePictureChoosed | function |                                                                      | Callback before done. You must return boolean. If you return false, it will stop. |
+| onPictureChoosed | function |                                                                            | Callback where is passed image edited as parameter |
+| photo            | object   | ```{  uri: string } ```                                                    | uri of image to be edited                          |
+| btnTexts         | object   | ```{ crop: string, done: string, processing: string}```                    | name for crop, done and processing texts           |
 | onToggleModal    | function |                                                                            | Callback called when modal is dismissed            |
 | borderColor      | string   | #a4a4a4                                                                    | Color for crop mask border                         |
 | allowRotate      | boolean  | true                                                                       | Show rotate option                                 |
@@ -101,12 +101,15 @@ export default class App extends React.Component {
 | icons      | object   | ```{ crop: ReactNode, back: ReactNode, processing: ReactNode }``` | Some icons can be changed
 
 
-## Return of onPictureChoosed is an object with format:
+## Return of onBeforePictureChoosed/onPictureChoosed is an object with format:
 
 ```javascript
 {
     uri: string,
-    base64: string // undefined if base64 is false on saveOptions prop
+    base64: string | undefined, // undefined if base64 is false on saveOptions prop
+    width: number,
+    height: number,
+    cropped: boolean // Whether cropped or not
 }
 ```
 ## Run the example!
