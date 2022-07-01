@@ -87,17 +87,18 @@ export default class App extends React.Component {
 | Props            | Type     | Default                                                                    | Description                                        |
 |------------------|----------|----------------------------------------------------------------------------|----------------------------------------------------|
 | isVisible        | boolean  | false                                                                      | Show or hide modal with image manipulator UI       |
-| onPictureChoosed | function |                                                                            | Callback where is passed image edited as parameter |
-| photo            | object   | ```{  "uri": string } ```                                       | uri of image to be edited                          |
-| btnTexts         | object   | ```{ "crop": string, "done": string, "processing": string}```    | name for crop, done and processing texts           |
+| onBeforePictureChoosed | function | ```{  uri: string, base64: string | undefined, width: number, height: number, cropped: boolean } ``` | Callback before done. You must return boolean. If you return false, it will stop. |
+| onPictureChoosed | function | ```{  uri: string, base64: string | undefined, width: number, height: number, cropped: boolean } ``` | Callback where is passed image edited as parameter |
+| photo            | object   | ```{  uri: string } ```                                       | uri of image to be edited                          |
+| btnTexts         | object   | ```{ crop: string, done: string, processing: string}```    | name for crop, done and processing texts           |
 | onToggleModal    | function |                                                                            | Callback called when modal is dismissed            |
 | borderColor      | string   | #a4a4a4                                                                    | Color for crop mask border                         |
 | allowRotate      | boolean  | true                                                                       | Show rotate option                                 |
 | allowFlip        | boolean  | true                                                                       | Show flip option                                   |
-| saveOptions      | object   | ```{ "compress": number, "format": string, "base64": boolean}``` | A map defining how modified image should be saved  
-| fixedMask      | object   | ```{ "width": number, "height": number }``` | Width and height fixed mask
-| ratio      | object   | ```{ "width": number, "height": number }``` | Width and height cropping ratio
-| icons      | object   | ```{ "crop": ReactNode, "back": ReactNode, "processing": ReactNode }``` | Some icons can be changed
+| saveOptions      | object   | ```{ compress: number, format: string, base64: boolean}``` | A map defining how modified image should be saved  
+| fixedMask      | object   | ```{ width: number, height: number }``` | Width and height fixed mask
+| ratio      | object   | ```{ width: number, height: number }``` | Width and height cropping ratio
+| icons      | object   | ```{ crop: ReactNode, back: ReactNode, processing: ReactNode }``` | Some icons can be changed
 
 
 ## Return of onPictureChoosed is an object with format:
