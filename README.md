@@ -18,7 +18,7 @@
 </p>
 
 ## Crop and rotate image without detach your expo project!
-## `Expo.ImageManipulator` is only a API without a UI, so you have to build your own UI on top of it, or choose detach your project to use third party linked packages, witch is no so good because a pure javascript Expo project is marvelous!
+## `Expo.ImageManipulator` is only an API, so it does not contain a UI. You will have to build your own UI on top of it, or choose to detach your project and use third party linked packages, which is not as good because a pure javascript Expo project is marvelous!
 
 [PRs are welcome...](https://github.com/brunon80/expo-image-crop/pulls)
 
