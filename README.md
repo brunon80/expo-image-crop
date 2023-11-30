@@ -31,8 +31,8 @@
 
 ### Expo Dependences
 - yarn add react-native-vector-icons
-- expo install expo-permissions
 - expo install expo-image-picker
+- expo install expo-camera
 - expo install expo-file-system
 - expo install expo-image-manipulator
 
